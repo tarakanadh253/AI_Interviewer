@@ -1,5 +1,5 @@
 // API service for Django backend
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'development' ? 'http://localhost:8000/api' : 'https://ai-interviewer-backend-f9t5.onrender.com/api');
 
 interface UserProfile {
   id: number;
