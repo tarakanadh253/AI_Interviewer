@@ -84,6 +84,8 @@ const AdminDashboard = () => {
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [userSessions, setUserSessions] = useState<InterviewSession[]>([]);
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [showPasswordChange, setShowPasswordChange] = useState(false);
 
   // Questions state
   const [questions, setQuestions] = useState<Question[]>([]);
@@ -145,7 +147,7 @@ const AdminDashboard = () => {
       setUsers([]); // Ensure users is always an array
       toast({
         title: "Error",
-        description: "Failed to load users. Please try again.",
+        description: error.message || "Failed to load users. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -174,7 +176,7 @@ const AdminDashboard = () => {
       setUserSessions([]);
       toast({
         title: "Error",
-        description: "Failed to load user sessions.",
+        description: error.message || "Failed to load user sessions.",
         variant: "destructive",
       });
     } finally {
@@ -257,32 +259,49 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleUpdateUser = async () => {
+  const handleUpdateAccessType = async () => {
     if (!selectedUser) return;
+
+    const newAccessType = selectedUser.access_type === 'FULL' ? 'TRIAL' : 'FULL';
 
     try {
       await apiService.updateAdminUser(selectedUser.id, {
-        is_active: selectedUser.is_active,
-        access_type: selectedUser.access_type,
-        has_used_trial: selectedUser.has_used_trial,
-        email: selectedUser.email,
-        name: selectedUser.name || undefined,
+        access_type: newAccessType
       });
+
+      setSelectedUser({ ...selectedUser, access_type: newAccessType });
       toast({
         title: "Success",
-        description: "User updated successfully",
+        description: `User access updated to ${newAccessType === 'FULL' ? 'Full Access' : 'Trial'}`,
       });
       fetchUsers();
-      // Refresh selected user
-      const updatedUsers = await apiService.getUsers();
-      const updatedUser = updatedUsers.find(u => u.id === selectedUser.id);
-      if (updatedUser) {
-        setSelectedUser(updatedUser);
-      }
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to update user",
+        description: error.message || "Failed to update access type",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (!selectedUser || !newPassword) return;
+
+    try {
+      await apiService.updateAdminUser(selectedUser.id, {
+        password: newPassword
+      });
+
+      toast({
+        title: "Success",
+        description: "Password updated successfully",
+      });
+      setNewPassword("");
+      setShowPasswordChange(false);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update password",
         variant: "destructive",
       });
     }
@@ -349,7 +368,7 @@ const AdminDashboard = () => {
       console.error("Error fetching questions:", error);
       toast({
         title: "Error",
-        description: "Failed to fetch questions",
+        description: (error as Error).message || "Failed to fetch questions",
         variant: "destructive",
       });
     } finally {
@@ -366,7 +385,7 @@ const AdminDashboard = () => {
       console.error("Error fetching topics:", error);
       toast({
         title: "Error",
-        description: "Failed to fetch topics",
+        description: (error as Error).message || "Failed to fetch topics",
         variant: "destructive",
       });
     } finally {
@@ -725,8 +744,8 @@ const AdminDashboard = () => {
                           <TableCell>
                             <span
                               className={`px-2 py-1 rounded text-xs ${user.access_type === 'FULL'
-                                  ? "bg-primary/20 text-primary font-medium"
-                                  : "bg-secondary/20 text-secondary"
+                                ? "bg-primary/20 text-primary font-medium"
+                                : "bg-secondary/20 text-secondary"
                                 }`}
                             >
                               {user.access_type === 'FULL' ? 'Full Access' : 'Trial'}
@@ -735,8 +754,8 @@ const AdminDashboard = () => {
                           <TableCell>
                             <span
                               className={`px-2 py-1 rounded text-xs ${user.is_active
-                                  ? "bg-primary/20 text-primary"
-                                  : "bg-muted text-muted-foreground"
+                                ? "bg-primary/20 text-primary"
+                                : "bg-muted text-muted-foreground"
                                 }`}
                             >
                               {user.is_active ? "Active" : "Inactive"}
@@ -745,8 +764,8 @@ const AdminDashboard = () => {
                           <TableCell>
                             <span
                               className={`px-2 py-1 rounded text-xs ${user.has_used_trial
-                                  ? "bg-secondary/20 text-secondary"
-                                  : "bg-primary/20 text-primary"
+                                ? "bg-secondary/20 text-secondary"
+                                : "bg-primary/20 text-primary"
                                 }`}
                             >
                               {user.has_used_trial ? "Yes" : "No"}
@@ -1096,8 +1115,8 @@ const AdminDashboard = () => {
                           <TableCell>
                             <span
                               className={`px-2 py-1 rounded text-xs ${q.source_type === "LINK"
-                                  ? "bg-blue-500/20 text-blue-500"
-                                  : "bg-purple-500/20 text-purple-500"
+                                ? "bg-blue-500/20 text-blue-500"
+                                : "bg-purple-500/20 text-purple-500"
                                 }`}
                             >
                               {q.source_type === "LINK" ? "From Links" : "Manual"}
@@ -1111,10 +1130,10 @@ const AdminDashboard = () => {
                           <TableCell>
                             <span
                               className={`px-2 py-1 rounded text-xs ${q.difficulty === "HARD"
-                                  ? "bg-destructive/20 text-destructive"
-                                  : q.difficulty === "MEDIUM"
-                                    ? "bg-secondary/20 text-secondary"
-                                    : "bg-primary/20 text-primary"
+                                ? "bg-destructive/20 text-destructive"
+                                : q.difficulty === "MEDIUM"
+                                  ? "bg-secondary/20 text-secondary"
+                                  : "bg-primary/20 text-primary"
                                 }`}
                             >
                               {q.difficulty}
@@ -1148,8 +1167,8 @@ const AdminDashboard = () => {
                           <TableCell>
                             <span
                               className={`px-2 py-1 rounded text-xs ${q.is_active
-                                  ? "bg-green-500/20 text-green-500"
-                                  : "bg-gray-500/20 text-gray-500"
+                                ? "bg-green-500/20 text-green-500"
+                                : "bg-gray-500/20 text-gray-500"
                                 }`}
                             >
                               {q.is_active ? "Active" : "Inactive"}
@@ -1233,8 +1252,8 @@ const AdminDashboard = () => {
                     <p className="text-foreground">
                       <span
                         className={`px-2 py-1 rounded text-xs ${selectedUser.is_active
-                            ? "bg-primary/20 text-primary"
-                            : "bg-muted text-muted-foreground"
+                          ? "bg-primary/20 text-primary"
+                          : "bg-muted text-muted-foreground"
                           }`}
                       >
                         {selectedUser.is_active ? "Active" : "Inactive"}
@@ -1246,8 +1265,8 @@ const AdminDashboard = () => {
                     <p className="text-foreground">
                       <span
                         className={`px-2 py-1 rounded text-xs ${selectedUser.access_type === 'FULL'
-                            ? "bg-primary/20 text-primary font-medium"
-                            : "bg-secondary/20 text-secondary"
+                          ? "bg-primary/20 text-primary font-medium"
+                          : "bg-secondary/20 text-secondary"
                           }`}
                       >
                         {selectedUser.access_type === 'FULL' ? 'Full Access' : 'Trial'}
@@ -1260,8 +1279,8 @@ const AdminDashboard = () => {
                       <p className="text-foreground">
                         <span
                           className={`px-2 py-1 rounded text-xs ${selectedUser.has_used_trial
-                              ? "bg-secondary/20 text-secondary"
-                              : "bg-primary/20 text-primary"
+                            ? "bg-secondary/20 text-secondary"
+                            : "bg-primary/20 text-primary"
                             }`}
                         >
                           {selectedUser.has_used_trial ? "Used" : "Available"}
@@ -1277,53 +1296,96 @@ const AdminDashboard = () => {
                   </div>
                 </div>
 
-                <div className="flex gap-2 mt-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleToggleUserStatus(selectedUser)}
-                  >
-                    {selectedUser.is_active ? (
-                      <>
-                        <EyeOff className="h-4 w-4 mr-2" />
-                        Deactivate User
-                      </>
-                    ) : (
-                      <>
-                        <Eye className="h-4 w-4 mr-2" />
-                        Activate User
-                      </>
-                    )}
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      const newAccessType = selectedUser.access_type === 'FULL' ? 'TRIAL' : 'FULL';
-                      setSelectedUser({ ...selectedUser, access_type: newAccessType });
-                      handleUpdateUser();
-                    }}
-                  >
-                    {selectedUser.access_type === 'FULL' ? 'Set to Trial' : 'Set to Full Access'}
-                  </Button>
-                  {selectedUser.has_used_trial && (
+                <div className="flex flex-col gap-4 mt-6">
+                  {showPasswordChange ? (
+                    <div className="p-4 rounded-lg bg-muted/20 border border-border">
+                      <h4 className="text-sm font-medium text-foreground mb-3">Change Password</h4>
+                      <div className="flex gap-2">
+                        <Input
+                          type="text"
+                          placeholder="Enter new password"
+                          value={newPassword}
+                          onChange={(e) => setNewPassword(e.target.value)}
+                          className="bg-input border-border"
+                        />
+                        <Button
+                          onClick={handleChangePassword}
+                          disabled={!newPassword || newPassword.length < 6}
+                          className="whitespace-nowrap"
+                        >
+                          Save
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          onClick={() => {
+                            setShowPasswordChange(false);
+                            setNewPassword("");
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-2">
+                        Password must be at least 6 characters.
+                      </p>
+                    </div>
+                  ) : null}
+
+                  <div className="flex flex-wrap gap-2">
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleResetTrial(selectedUser.id)}
+                      onClick={() => handleToggleUserStatus(selectedUser)}
                     >
-                      <RefreshCw className="h-4 w-4 mr-2" />
-                      Reset Trial
+                      {selectedUser.is_active ? (
+                        <>
+                          <EyeOff className="h-4 w-4 mr-2" />
+                          Deactivate User
+                        </>
+                      ) : (
+                        <>
+                          <Eye className="h-4 w-4 mr-2" />
+                          Activate User
+                        </>
+                      )}
                     </Button>
-                  )}
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDeleteUser(selectedUser.id)}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete User
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleUpdateAccessType}
+                    >
+                      {selectedUser.access_type === 'FULL' ? 'Set to Trial' : 'Set to Full Access (Admin)'}
+                    </Button>
+                    {!showPasswordChange && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setShowPasswordChange(true)}
+                      >
+                        <Lock className="h-4 w-4 mr-2" />
+                        Change Password
+                      </Button>
+                    )}
+                    {selectedUser.has_used_trial && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleResetTrial(selectedUser.id)}
+                      >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Reset Trial
+                      </Button>
+                    )}
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeleteUser(selectedUser.id)}
+                      className="ml-auto"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete User
+                    </Button>
+                  </div>
                 </div>
               </Card>
 
@@ -1359,10 +1421,10 @@ const AdminDashboard = () => {
                           </div>
                           <span
                             className={`px-2 py-1 rounded text-xs ${session.status === 'COMPLETED'
-                                ? "bg-primary/20 text-primary"
-                                : session.status === 'IN_PROGRESS'
-                                  ? "bg-secondary/20 text-secondary"
-                                  : "bg-muted text-muted-foreground"
+                              ? "bg-primary/20 text-primary"
+                              : session.status === 'IN_PROGRESS'
+                                ? "bg-secondary/20 text-secondary"
+                                : "bg-muted text-muted-foreground"
                               }`}
                           >
                             {session.status}
