@@ -26,7 +26,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Edit, Trash2, Users, FileText, Eye, EyeOff, RefreshCw, ExternalLink, BookOpen } from "lucide-react";
+import { Plus, Edit, Trash2, Users, FileText, Eye, EyeOff, RefreshCw, ExternalLink, BookOpen, Lock } from "lucide-react";
 import { apiService, type Question, type Topic } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
 
@@ -660,13 +660,13 @@ const AdminDashboard = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="TRIAL">Trial - One Free Interview</SelectItem>
-                          <SelectItem value="FULL">Full Access - Unlimited Interviews</SelectItem>
+                          <SelectItem value="FULL">Full Access (Admin)</SelectItem>
                         </SelectContent>
                       </Select>
                       <p className="text-xs text-muted-foreground mt-1">
                         {userFormData.access_type === 'TRIAL'
                           ? 'User will get one free interview'
-                          : 'User can create unlimited interview sessions'}
+                          : 'User can create unlimited interview sessions and access admin features if authorized'}
                       </p>
                     </div>
                     <div className="flex items-center gap-2">

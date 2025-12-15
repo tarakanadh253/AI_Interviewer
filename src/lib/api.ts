@@ -401,6 +401,7 @@ class ApiService {
     has_used_trial?: boolean;
     email?: string;
     name?: string;
+    password?: string;
   }): Promise<UserProfile> {
     return this.request<UserProfile>(`/admin/users/${id}/`, {
       method: 'PATCH',
