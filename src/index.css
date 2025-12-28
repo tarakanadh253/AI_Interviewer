@@ -8,6 +8,7 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+<<<<<<< HEAD
     /* OHG Brand Colors HSL Conversion */
     /* Navy #0A2A43 -> 206 74% 15% */
     /* Orange #F26123 -> 18 89% 54% */
@@ -67,11 +68,58 @@ All colors MUST be HSL.
     --glow-cyan: 0 0 15px hsl(187 71% 42% / 0.2);
     --glow-pink: 0 0 15px hsl(18 89% 54% / 0.2);
     --glow-purple: 0 0 15px hsl(206 74% 15% / 0.2);
+=======
+    --background: 240 30% 8%;
+    --foreground: 180 20% 95%;
+
+    --card: 240 25% 12%;
+    --card-foreground: 180 20% 95%;
+
+    --popover: 240 28% 10%;
+    --popover-foreground: 180 20% 95%;
+
+    --primary: 0 0% 100%;
+    --primary-foreground: 240 30% 8%;
+
+    --secondary: 330 100% 50%;
+    --secondary-foreground: 240 30% 8%;
+
+    --muted: 240 20% 20%;
+    --muted-foreground: 180 10% 60%;
+
+    --accent: 280 80% 60%;
+    --accent-foreground: 180 20% 95%;
+
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 240 20% 20%;
+    --input: 240 20% 18%;
+    --ring: 0 0% 100%;
+
+    --radius: 1rem;
+
+    /* Custom OHG365 Design Tokens */
+    --neon-cyan: 0 0% 100%;
+    --neon-pink: 330 100% 50%;
+    --neon-purple: 280 80% 60%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(0 0% 100% / 0.9), hsl(240 20% 80% / 0.8));
+    --gradient-secondary: linear-gradient(135deg, hsl(330 100% 50% / 0.6), hsl(280 80% 60% / 0.6));
+    --gradient-background: linear-gradient(180deg, hsl(240 30% 8%), hsl(240 35% 6%));
+
+    /* Glows */
+    --glow-cyan: 0 0 20px hsl(0 0% 100% / 0.3), 0 0 40px hsl(0 0% 100% / 0.1);
+    --glow-pink: 0 0 20px hsl(330 100% 50% / 0.5), 0 0 40px hsl(330 100% 50% / 0.3);
+    --glow-purple: 0 0 20px hsl(280 80% 60% / 0.5), 0 0 40px hsl(280 80% 60% / 0.3);
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
+<<<<<<< HEAD
 
   .dark {
     /* OHG Dark Mode mapping */
@@ -111,6 +159,8 @@ All colors MUST be HSL.
 
     --gradient-background: linear-gradient(180deg, #0A2A43 0%, #051525 100%);
   }
+=======
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 }
 
 @layer base {

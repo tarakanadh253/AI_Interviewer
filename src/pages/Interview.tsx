@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+<<<<<<< HEAD
 import { Mic, MicOff, SkipForward, Volume2, Loader2, AlertTriangle, ShieldAlert, Lock, Info, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +10,11 @@ import { useToast } from "@/hooks/use-toast";
 import { apiService, type Question, type InterviewSession } from "@/lib/api";
 import { useExamProctoring } from "@/hooks/useExamProctoring";
 
+=======
+import { Mic, MicOff, SkipForward, Volume2, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { apiService, type Question, type InterviewSession } from "@/lib/api";
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
 const Interview = () => {
   const navigate = useNavigate();
@@ -20,7 +26,10 @@ const Interview = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [transcript, setTranscript] = useState("");
   const [isTranscribing, setIsTranscribing] = useState(false);
+<<<<<<< HEAD
   const [isInitializingMic, setIsInitializingMic] = useState(false);
+=======
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   const [isLoading, setIsLoading] = useState(true);
   const [submittedAnswers, setSubmittedAnswers] = useState<Set<number>>(new Set());
   const [speechRecognitionAvailable, setSpeechRecognitionAvailable] = useState(false);
@@ -30,6 +39,7 @@ const Interview = () => {
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const transcriptBufferRef = useRef<string>("");
   const isRecordingRef = useRef<boolean>(false);
+<<<<<<< HEAD
   const [showMobileQuestions, setShowMobileQuestions] = useState(false);
 
   const { isFullscreen, isBanned, tabSwitchCount, enterFullscreen } = useExamProctoring({
@@ -48,6 +58,8 @@ const Interview = () => {
       }
     }
   });
+=======
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
   // Load session and questions on mount
   useEffect(() => {
@@ -184,8 +196,12 @@ const Interview = () => {
 
   // Auto-play question audio when question changes or questions are loaded
   useEffect(() => {
+<<<<<<< HEAD
     // Only auto-play if fullscreen is active (interview has effectively started)
     if (isFullscreen && questions.length > 0 && currentQuestionIndex >= 0 && currentQuestionIndex < questions.length && !isLoading) {
+=======
+    if (questions.length > 0 && currentQuestionIndex >= 0 && currentQuestionIndex < questions.length && !isLoading) {
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       // Auto-play question audio when question changes
       // Use setTimeout to ensure browser allows autoplay (user interaction required for first play)
       const timer = setTimeout(() => {
@@ -204,7 +220,11 @@ const Interview = () => {
             utterance.lang = 'en-US';
 
             utterance.onstart = () => {
+<<<<<<< HEAD
               console.debug('Question audio auto-played');
+=======
+              console.log('Question audio auto-played');
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
             };
 
             utterance.onerror = (event) => {
@@ -220,7 +240,11 @@ const Interview = () => {
 
       return () => clearTimeout(timer);
     }
+<<<<<<< HEAD
   }, [currentQuestionIndex, questions, isLoading, isFullscreen]);
+=======
+  }, [currentQuestionIndex, questions, isLoading]);
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
   useEffect(() => {
     if (!session?.started_at) return;
@@ -385,7 +409,11 @@ const Interview = () => {
         utterance.lang = 'en-US';
 
         utterance.onstart = () => {
+<<<<<<< HEAD
           console.debug('Question audio started playing');
+=======
+          console.log('Question audio started playing');
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         };
 
         utterance.onerror = (event) => {
@@ -399,6 +427,7 @@ const Interview = () => {
     }
   };
 
+<<<<<<< HEAD
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const submitAnswer = async (answerText: string, specificQuestion?: Question) => {
@@ -447,10 +476,33 @@ const Interview = () => {
       }
     } finally {
       setIsSubmitting(false);
+=======
+  const submitAnswer = async (answerText: string) => {
+    if (!session || !questions[currentQuestionIndex] || !answerText.trim()) {
+      return;
+    }
+
+    try {
+      const question = questions[currentQuestionIndex];
+      await apiService.submitAnswer(session.id, question.id, answerText);
+      setSubmittedAnswers(prev => new Set([...prev, question.id]));
+      toast({
+        title: "Answer submitted",
+        description: "Your answer has been evaluated",
+      });
+    } catch (error: any) {
+      console.error('Error submitting answer:', error);
+      toast({
+        title: "Submission failed",
+        description: error.message || "Could not submit answer. Please try again.",
+        variant: "destructive",
+      });
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     }
   };
 
   const handleNext = async () => {
+<<<<<<< HEAD
     try {
       // capture current state vars before they change
       const currentQ = questions[currentQuestionIndex];
@@ -487,12 +539,37 @@ const Interview = () => {
         description: "Could not proceed to next question. Please try again.",
         variant: "destructive"
       });
+=======
+    // Stop any ongoing recording
+    if (isRecording) {
+      stopRecording();
+    }
+
+    // Submit current answer if we have transcript
+    if (transcript.trim() && session && questions[currentQuestionIndex]) {
+      const questionId = questions[currentQuestionIndex].id;
+      if (!submittedAnswers.has(questionId)) {
+        await submitAnswer(transcript);
+      }
+    }
+
+    // Move to next question or complete
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex((prev) => prev + 1);
+      setTranscript("");
+      transcriptBufferRef.current = ""; // Reset transcript buffer
+      setIsRecording(false);
+      // Question audio will auto-play via useEffect when currentQuestionIndex changes
+    } else {
+      await handleComplete();
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     }
   };
 
   const handleComplete = async () => {
     if (!session) return;
 
+<<<<<<< HEAD
     // Optimistically navigate immediately
     navigate("/results");
 
@@ -509,11 +586,28 @@ const Interview = () => {
 
     } catch (error: any) {
       console.error('Error firing completion:', error);
+=======
+    try {
+      // Complete session
+      const completedSession = await apiService.completeSession(session.id);
+      localStorage.setItem('completed_session_id', completedSession.id.toString());
+      navigate("/results");
+    } catch (error: any) {
+      console.error('Error completing session:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Could not complete interview.",
+        variant: "destructive",
+      });
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     }
   };
 
   const startRecording = async () => {
+<<<<<<< HEAD
     setIsInitializingMic(true);
+=======
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     try {
       // Request microphone permission
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -550,7 +644,10 @@ const Interview = () => {
               title: "Transcription Error",
               description: "Could not start speech recognition. You can still type your answer.",
               variant: "destructive",
+<<<<<<< HEAD
               duration: 3000,
+=======
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
             });
           }
         }
@@ -559,7 +656,10 @@ const Interview = () => {
           title: "Speech Recognition Unavailable",
           description: "Your browser doesn't support speech recognition. Please type your answer manually.",
           variant: "destructive",
+<<<<<<< HEAD
           duration: 3000,
+=======
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         });
       }
 
@@ -582,13 +682,17 @@ const Interview = () => {
         description: errorMessage,
         variant: "destructive",
       });
+<<<<<<< HEAD
     } finally {
       setIsInitializingMic(false);
+=======
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     }
   };
 
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
+<<<<<<< HEAD
       if (mediaRecorderRef.current.state !== 'inactive') {
         try {
           mediaRecorderRef.current.stop();
@@ -596,6 +700,9 @@ const Interview = () => {
           console.error('Error stopping recorder:', error);
         }
       }
+=======
+      mediaRecorderRef.current.stop();
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
       if (recognitionRef.current) {
         try {
@@ -643,7 +750,11 @@ const Interview = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="p-8">
+<<<<<<< HEAD
           <p className="text-muted-foreground">No questions available. Please select courses and try again.</p>
+=======
+          <p className="text-muted-foreground">No questions available. Please select topics and try again.</p>
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
           <Button onClick={() => navigate("/topic-selection")} className="mt-4">
             Go Back
           </Button>
@@ -652,6 +763,7 @@ const Interview = () => {
     );
   }
 
+<<<<<<< HEAD
 
   const currentQuestion = questions[currentQuestionIndex];
   const isAnswered = currentQuestion && submittedAnswers.has(currentQuestion.id);
@@ -765,6 +877,34 @@ const Interview = () => {
             <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
               <div
                 className="h-full bg-ohg-orange transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(242,97,35,0.5)]"
+=======
+  const currentQuestion = questions[currentQuestionIndex];
+  const isAnswered = currentQuestion && submittedAnswers.has(currentQuestion.id);
+
+  return (
+    <div className="min-h-screen flex flex-col lg:flex-row bg-gradient-to-br from-background via-background to-background/95">
+      {/* Classic Elegant Sidebar */}
+      {/* Classic Professional Sidebar */}
+      <div className="w-full lg:w-80 bg-slate-950 border-b lg:border-b-0 lg:border-r border-slate-800 flex flex-col lg:sticky lg:top-0 lg:h-screen z-20">
+
+        {/* Header */}
+        <div className="p-8 border-b border-slate-800 bg-slate-950/50 backdrop-blur-sm">
+          <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/20 text-primary">
+              <span className="font-bold">Q</span>
+            </span>
+            Overview
+          </h2>
+
+          <div className="mt-6">
+            <div className="flex justify-between text-xs font-medium text-slate-400 mb-2">
+              <span>Progress</span>
+              <span>{questions.length > 0 ? Math.round((submittedAnswers.size / questions.length) * 100) : 0}%</span>
+            </div>
+            <div className="h-1.5 w-full bg-slate-800 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary transition-all duration-500 ease-out rounded-full shadow-[0_0_10px_rgba(var(--primary),0.5)]"
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                 style={{ width: `${questions.length > 0 ? (submittedAnswers.size / questions.length) * 100 : 0}%` }}
               />
             </div>
@@ -772,25 +912,44 @@ const Interview = () => {
         </div>
 
         {/* Questions List */}
+<<<<<<< HEAD
         <div className={cn("flex-1 overflow-y-auto py-4 px-4 custom-scrollbar-light", !showMobileQuestions && "hidden lg:block")}>
+=======
+        <div className="flex-1 overflow-y-auto py-4 px-4 custom-scrollbar">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
           <div className="space-y-1">
             {questions.map((q, index) => {
               const isCurrent = index === currentQuestionIndex;
               const isAnswered = submittedAnswers.has(q.id);
+<<<<<<< HEAD
+=======
+              const isPast = index < currentQuestionIndex;
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
               return (
                 <div
                   key={q.id}
                   className={`group relative mb-2 rounded-xl border p-4 transition-all duration-300 ${isCurrent
+<<<<<<< HEAD
                     ? "bg-white/10 border-ohg-orange/50 shadow-inner"
                     : isAnswered
                       ? "bg-ohg-teal/10 border-transparent hover:bg-white/5"
                       : "bg-transparent border-transparent hover:bg-white/5"
+=======
+                    ? "bg-slate-900/80 border-primary/50 shadow-[0_0_20px_-5px_rgba(0,0,0,0.3)]"
+                    : isAnswered
+                      ? "bg-slate-900/40 border-emerald-500/20 hover:bg-slate-900/60"
+                      : "bg-transparent border-transparent hover:bg-slate-900/40"
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                     }`}
                 >
                   {/* Active Indicator Line */}
                   {isCurrent && (
+<<<<<<< HEAD
                     <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-ohg-orange shadow-[0_0_10px_currentColor]" />
+=======
+                    <div className="absolute left-0 top-2 bottom-2 w-1 rounded-r-full bg-primary shadow-[0_0_10px_currentColor]" />
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                   )}
 
                   <div className="flex items-start gap-4 pl-2">
@@ -798,10 +957,17 @@ const Interview = () => {
                     <div className="flex-shrink-0 pt-0.5">
                       <div
                         className={`flex h-8 w-8 items-center justify-center rounded-lg border text-sm font-bold transition-all duration-300 ${isCurrent
+<<<<<<< HEAD
                           ? "border-ohg-orange bg-ohg-orange text-white shadow-lg scale-110"
                           : isAnswered
                             ? "border-ohg-teal bg-ohg-teal/20 text-ohg-teal"
                             : "border-white/10 bg-white/5 text-white/40"
+=======
+                          ? "border-primary bg-primary text-slate-950 shadow-lg shadow-primary/20 scale-110"
+                          : isAnswered
+                            ? "border-emerald-500 bg-emerald-500/10 text-emerald-500"
+                            : "border-slate-700 bg-slate-800/50 text-slate-500"
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                           }`}
                       >
                         {isAnswered ? "✓" : index + 1}
@@ -811,25 +977,43 @@ const Interview = () => {
                     {/* Content */}
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center justify-between mb-0.5">
+<<<<<<< HEAD
                         <span className={`text-sm font-semibold truncate pr-2 ${isCurrent ? "text-white" : isAnswered ? "text-ohg-teal" : "text-white/40"
+=======
+                        <span className={`text-sm font-semibold truncate pr-2 ${isCurrent ? "text-white" : isAnswered ? "text-emerald-400" : "text-slate-400"
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                           }`}>
                           Question {index + 1}
                         </span>
                         {isCurrent && (
                           <span className="flex h-2 w-2">
+<<<<<<< HEAD
                             <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-ohg-orange opacity-75"></span>
                             <span className="relative inline-flex rounded-full h-2 w-2 bg-ohg-orange"></span>
+=======
+                            <span className="animate-ping absolute inline-flex h-2 w-2 rounded-full bg-primary opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                           </span>
                         )}
                       </div>
 
                       <div className="flex items-center gap-2">
+<<<<<<< HEAD
                         <span className={`text-xs ${isCurrent ? "text-white/60" : "text-white/30"}`}>
                           {currentQuestionIndex === index ? "Active" : isAnswered ? "Completed" : "Pending"}
                         </span>
                         {/* Difficulty Dot */}
                         <span className="h-1 w-1 rounded-full bg-white/20"></span>
                         <span className="text-xs text-white/30 uppercase tracking-wider">{q.difficulty}</span>
+=======
+                        <span className={`text-xs ${isCurrent ? "text-slate-300" : "text-slate-500"}`}>
+                          {currentQuestionIndex === index ? "Active" : isAnswered ? "Completed" : "Pending"}
+                        </span>
+                        {/* Difficulty Dot */}
+                        <span className="h-1 w-1 rounded-full bg-slate-700"></span>
+                        <span className="text-xs text-slate-500 uppercase tracking-wider">{q.difficulty}</span>
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                       </div>
                     </div>
                   </div>
@@ -839,14 +1023,21 @@ const Interview = () => {
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Footer */}
         <div className="p-6 border-t border-white/10 bg-ohg-navy text-center">
           <p className="text-xs text-white/40 font-medium">
+=======
+        {/* Minimal Footer Legend */}
+        <div className="p-6 border-t border-slate-800 bg-slate-950/50 text-center">
+          <p className="text-xs text-slate-500 font-medium">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
             Step {currentQuestionIndex + 1} of {questions.length}
           </p>
         </div>
       </div>
 
+<<<<<<< HEAD
       {/* Main Content - Light & Clean */}
       <div className="flex-1 overflow-y-auto min-h-screen bg-background">
         <div className="max-w-5xl mx-auto p-4 md:p-8 lg:p-12">
@@ -871,15 +1062,41 @@ const Interview = () => {
                         WARNINGS: {tabSwitchCount}/2
                       </span>
                     )}
+=======
+      {/* Main Content */}
+      {/* Main Content - Classic Professional */}
+      <div className="flex-1 overflow-y-auto min-h-screen bg-slate-950/20">
+        <div className="max-w-5xl mx-auto p-8 lg:p-12">
+
+          {/* Timer & Meta */}
+          <div className="flex justify-between items-end mb-8 border-b border-primary/10 pb-4">
+            <div>
+              <span className="text-xs font-bold text-primary tracking-widest uppercase mb-1 block">
+                Current Question
+              </span>
+              <div className="text-sm text-slate-400">
+                {currentQuestion && (
+                  <span className="flex items-center gap-2">
+                    {currentQuestion.topic_name}
+                    <span className="h-1 w-1 rounded-full bg-slate-600"></span>
+                    <span className="uppercase text-[10px] tracking-wider border border-slate-700 px-1.5 py-0.5 rounded text-slate-400">
+                      {currentQuestion.difficulty}
+                    </span>
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                   </span>
                 )}
               </div>
             </div>
+<<<<<<< HEAD
             <div className={`font-mono text-4xl font-light tracking-tighter ${timeLeft < 300 ? "text-red-500 animate-pulse" : "text-ohg-navy"}`}>
+=======
+            <div className={`font-mono text-4xl font-light tracking-tighter ${timeLeft < 300 ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]" : "text-slate-200"}`}>
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
               {formatTime(timeLeft)}
             </div>
           </div>
 
+<<<<<<< HEAD
           {/* Question Display */}
           <div className="mb-12 text-center space-y-8 animate-fade-in-up">
             <h2
@@ -887,6 +1104,11 @@ const Interview = () => {
               onContextMenu={(e) => e.preventDefault()}
               onCopy={(e) => { e.preventDefault(); return false; }}
             >
+=======
+          {/* Question Display - Hero Style */}
+          <div className="mb-12 text-center space-y-8 animate-fade-in-up">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-medium leading-tight text-white drop-shadow-2xl">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
               {currentQuestion?.question_text}
             </h2>
 
@@ -894,10 +1116,17 @@ const Interview = () => {
               <Button
                 variant="ghost"
                 size="sm"
+<<<<<<< HEAD
                 className="text-gray-500 hover:text-ohg-navy hover:bg-gray-100 rounded-full px-6 border border-transparent hover:border-gray-200 transition-all font-medium"
                 onClick={playQuestion}
               >
                 <Volume2 className="h-4 w-4 mr-2 text-ohg-teal" />
+=======
+                className="text-slate-400 hover:text-white hover:bg-white/5 rounded-full px-6 border border-transparent hover:border-slate-700 transition-all"
+                onClick={playQuestion}
+              >
+                <Volume2 className="h-4 w-4 mr-2 text-primary" />
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                 Replay Audio
               </Button>
             </div>
@@ -905,6 +1134,7 @@ const Interview = () => {
 
           {/* Recording / Interaction Area */}
           <div className="relative max-w-2xl mx-auto">
+<<<<<<< HEAD
             <Card className="relative p-1 bg-card border-border rounded-[2rem] shadow-xl overflow-hidden">
               <div className="bg-muted/30 rounded-[1.8rem] p-8 md:p-10 flex flex-col items-center gap-6 relative overflow-hidden">
                 {/* Ambience inside card */}
@@ -913,12 +1143,25 @@ const Interview = () => {
 
                 {/* Visualizer / Status */}
                 <div className="h-12 flex items-center justify-center gap-1 w-full relative z-10">
+=======
+            {/* Glass Card */}
+            <div className="absolute -inset-1 bg-gradient-to-b from-primary/20 to-transparent blur-2xl opacity-20 rounded-[2rem]"></div>
+            <Card className="relative p-1 bg-slate-900/40 backdrop-blur-2xl border-slate-800 rounded-[2rem] shadow-2xl overflow-hidden">
+              <div className="bg-slate-950/50 rounded-[1.8rem] p-8 md:p-10 border border-white/5 flex flex-col items-center gap-6">
+
+                {/* Visualizer / Status */}
+                <div className="h-12 flex items-center justify-center gap-1 w-full">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                   {isRecording ? (
                     <div className="flex items-center gap-1 h-12">
                       {[...Array(8)].map((_, i) => (
                         <div
                           key={i}
+<<<<<<< HEAD
                           className="w-1.5 bg-ohg-orange rounded-full animate-music-bar"
+=======
+                          className="w-1.5 bg-primary rounded-full animate-music-bar"
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                           style={{
                             animationDelay: `${i * 0.1}s`,
                           }}
@@ -926,13 +1169,18 @@ const Interview = () => {
                       ))}
                     </div>
                   ) : (
+<<<<<<< HEAD
                     <span className="text-sm font-semibold text-muted-foreground uppercase tracking-widest">
+=======
+                    <span className="text-sm font-medium text-slate-500 uppercase tracking-widest">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                       {isAnswered ? "Answer Recorded" : "Ready to Record"}
                     </span>
                   )}
                 </div>
 
                 {/* Big Mic Button */}
+<<<<<<< HEAD
                 <div className="relative group z-10">
                   {isRecording && (
                     <div className="absolute inset-0 bg-ohg-orange/20 rounded-full animate-ping"></div>
@@ -951,6 +1199,24 @@ const Interview = () => {
                       <Loader2 className="h-10 w-10 animate-spin text-red-500" />
                     ) : isRecording ? (
                       <div className="w-8 h-8 rounded bg-red-500 animate-pulse shadow-sm" />
+=======
+                <div className="relative group">
+                  {isRecording && (
+                    <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping"></div>
+                  )}
+                  <Button
+                    onClick={toggleRecording}
+                    disabled={isTranscribing || isAnswered}
+                    className={`relative w-24 h-24 rounded-full flex items-center justify-center transition-all duration-500 border-4 ${isRecording
+                      ? "bg-red-500/10 border-red-500 text-red-500 hover:bg-red-500/20"
+                      : isAnswered
+                        ? "bg-emerald-500/10 border-emerald-500 text-emerald-500 cursor-default"
+                        : "bg-slate-900 border-slate-700 text-slate-400 hover:border-primary hover:text-primary hover:bg-primary/5 hover:scale-105 hover:shadow-[0_0_30px_-5px_hsl(var(--primary)/0.3)]"
+                      }`}
+                  >
+                    {isRecording ? (
+                      <div className="w-8 h-8 rounded bg-current animate-pulse shadow-[0_0_15px_currentColor]" />
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                     ) : isAnswered ? (
                       <span className="text-2xl font-bold">✓</span>
                     ) : (
@@ -959,7 +1225,11 @@ const Interview = () => {
                   </Button>
                 </div>
 
+<<<<<<< HEAD
                 <p className="text-sm font-medium text-gray-500 relative z-10">
+=======
+                <p className="text-sm font-medium text-slate-400">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                   {isTranscribing
                     ? "Transcribing your answer..."
                     : isRecording
@@ -972,14 +1242,24 @@ const Interview = () => {
 
                 {/* Transcript Area */}
                 {(transcript || isRecording) && (
+<<<<<<< HEAD
                   <div className="w-full mt-4 p-4 rounded-xl bg-card border border-border text-left max-h-40 overflow-y-auto custom-scrollbar-light shadow-sm relative z-10">
                     {isRecording && !transcript && (
                       <div className="flex items-center gap-2 text-red-500 text-xs font-bold uppercase tracking-wider mb-2">
+=======
+                  <div className="w-full mt-4 p-4 rounded-xl bg-slate-900/50 border border-slate-800 text-left max-h-40 overflow-y-auto custom-scrollbar">
+                    {isRecording && !transcript && (
+                      <div className="flex items-center gap-2 text-primary text-xs font-bold uppercase tracking-wider mb-2">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                         <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                         Live
                       </div>
                     )}
+<<<<<<< HEAD
                     <p className="text-foreground leading-relaxed">
+=======
+                    <p className="text-slate-300 leading-relaxed">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                       {transcript || (speechRecognitionAvailable ? "Speak clearly..." : "Listening...")}
                     </p>
                   </div>
@@ -992,6 +1272,7 @@ const Interview = () => {
           <div className="mt-12 flex justify-center">
             <Button
               onClick={handleNext}
+<<<<<<< HEAD
               disabled={isTranscribing || isSubmitting}
               className={`px-10 py-6 text-lg rounded-full font-bold tracking-wide transition-all duration-300 select-none ${(isAnswered || transcript)
                 ? "bg-ohg-navy text-white hover:bg-[#051525] shadow-xl hover:scale-105" // High contrast "Next"
@@ -1003,6 +1284,15 @@ const Interview = () => {
                   <Loader2 className="h-5 w-5 animate-spin" /> Processing...
                 </span>
               ) : currentQuestionIndex < questions.length - 1 ? (
+=======
+              disabled={isTranscribing}
+              className={`px-10 py-6 text-lg rounded-full font-semibold tracking-wide transition-all duration-300 ${(isAnswered || transcript)
+                ? "bg-white text-slate-950 hover:bg-slate-200 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:scale-105" // High contrast "Next"
+                : "bg-slate-800 text-slate-400 hover:bg-slate-700"
+                }`}
+            >
+              {currentQuestionIndex < questions.length - 1 ? (
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                 <span className="flex items-center gap-3">
                   Next Question <SkipForward className="h-5 w-5" />
                 </span>
@@ -1014,7 +1304,11 @@ const Interview = () => {
 
           {/* Footer Tip */}
           <div className="mt-12 text-center opacity-40 hover:opacity-100 transition-opacity">
+<<<<<<< HEAD
             <p className="text-xs font-bold text-muted-foreground uppercase tracking-[0.2em]">
+=======
+            <p className="text-xs font-medium text-slate-500 uppercase tracking-[0.2em]">
+>>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
               Speak naturally • Take your time
             </p>
           </div>
