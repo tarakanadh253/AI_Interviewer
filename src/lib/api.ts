@@ -7,24 +7,15 @@ interface UserProfile {
   email: string;
   name: string | null;
   is_active: boolean;
-<<<<<<< HEAD
   role: 'ADMIN' | 'USER';
   access_type: 'TRIAL' | 'FULL' | null; // Access type is mostly relevant for USER
   has_used_trial: boolean;
   plain_password?: string;
-=======
-  access_type: 'TRIAL' | 'FULL';
-  has_used_trial: boolean;
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   created_at: string;
   updated_at: string;
 }
 
-<<<<<<< HEAD
 interface Course {
-=======
-interface Topic {
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   id: number;
   name: string;
   description: string | null;
@@ -33,7 +24,6 @@ interface Topic {
   updated_at: string;
 }
 
-<<<<<<< HEAD
 interface Round {
   id: number;
   topic: number;
@@ -45,17 +35,13 @@ interface Round {
   updated_at: string;
 }
 
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
+
 interface Question {
   id: number;
   topic: number;
   topic_name: string;
-<<<<<<< HEAD
   round?: number | null;
   round_name?: string | null;
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   source_type?: 'MANUAL' | 'LINK';
   source_type_display?: string;
   question_text: string;
@@ -133,7 +119,6 @@ class ApiService {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ error: response.statusText }));
       // If there are detailed validation errors, include them
-<<<<<<< HEAD
       // If there are detailed validation errors, include them
       // Handle various DRF error formats
       if (errorData.errors) {
@@ -161,16 +146,6 @@ class ApiService {
       }
 
       throw new Error(errorData.error || errorData.detail || `HTTP error! status: ${response.status} `);
-      throw new Error(errorData.error || errorData.detail || `HTTP error! status: ${response.status} `);
-=======
-      if (errorData.errors) {
-        const errorMessages = Object.entries(errorData.errors)
-          .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
-          .join('; ');
-        throw new Error(errorMessages || errorData.detail || errorData.error || `HTTP error! status: ${response.status}`);
-      }
-      throw new Error(errorData.error || errorData.detail || `HTTP error! status: ${response.status}`);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     }
 
     return response.json();
@@ -193,12 +168,8 @@ class ApiService {
     email: string;
     name?: string;
     is_active?: boolean;
-<<<<<<< HEAD
     role?: 'ADMIN' | 'USER';
     access_type?: 'TRIAL' | 'FULL' | null;
-=======
-    access_type?: 'TRIAL' | 'FULL';
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   }): Promise<UserProfile> {
     return this.request<UserProfile>('/users/', {
       method: 'POST',
@@ -229,13 +200,8 @@ class ApiService {
     return this.request(`/users/${username}/check-trial/`);
   }
 
-<<<<<<< HEAD
   // Course endpoints
   async getCourses(): Promise<Course[]> {
-=======
-  // Topic endpoints
-  async getTopics(): Promise<Topic[]> {
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     try {
       const result = await this.request<any>('/topics/');
       // Handle both direct array and paginated response
@@ -245,19 +211,11 @@ class ApiService {
         // Handle paginated response
         return result.results;
       } else {
-<<<<<<< HEAD
         console.error('Invalid courses response format:', result);
         return [];
       }
     } catch (error) {
       console.error('Error fetching courses:', error);
-=======
-        console.error('Invalid topics response format:', result);
-        return [];
-      }
-    } catch (error) {
-      console.error('Error fetching topics:', error);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       return []; // Return empty array on error
     }
   }
@@ -349,7 +307,6 @@ class ApiService {
   }
 
   // Admin question endpoints
-<<<<<<< HEAD
   async getAdminQuestions(topicId?: number, roundId?: number): Promise<Question[]> {
     try {
       const params = new URLSearchParams();
@@ -359,11 +316,7 @@ class ApiService {
       const query = params.toString();
       const result = await this.request<any>(`/admin/questions/${query ? `?${query}` : ''}`);
 
-=======
-  async getAdminQuestions(): Promise<Question[]> {
-    try {
-      const result = await this.request<any>('/admin/questions/');
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
+
       if (Array.isArray(result)) {
         return result;
       } else if (result && Array.isArray(result.results)) {
@@ -378,10 +331,7 @@ class ApiService {
 
   async createAdminQuestion(question: {
     topic: number;
-<<<<<<< HEAD
     round?: number | null;
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     source_type?: 'MANUAL' | 'LINK';
     question_text?: string;
     ideal_answer?: string;
@@ -429,13 +379,8 @@ class ApiService {
     return;
   }
 
-<<<<<<< HEAD
   // Admin course endpoints
   async getAdminCourses(): Promise<Course[]> {
-=======
-  // Admin topic endpoints
-  async getAdminTopics(): Promise<Topic[]> {
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     try {
       const result = await this.request<any>('/admin/topics/');
       if (Array.isArray(result)) {
@@ -445,16 +390,11 @@ class ApiService {
       }
       return [];
     } catch (error) {
-<<<<<<< HEAD
       console.error('Error fetching admin courses:', error);
-=======
-      console.error('Error fetching admin topics:', error);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       return [];
     }
   }
 
-<<<<<<< HEAD
   async createAdminCourse(course: {
     name: string;
     description?: string;
@@ -473,26 +413,6 @@ class ApiService {
   }
 
   async deleteAdminCourse(id: number): Promise<void> {
-=======
-  async createAdminTopic(topic: {
-    name: string;
-    description?: string;
-  }): Promise<Topic> {
-    return this.request<Topic>('/admin/topics/', {
-      method: 'POST',
-      body: JSON.stringify(topic),
-    });
-  }
-
-  async updateAdminTopic(id: number, topic: Partial<Topic>): Promise<Topic> {
-    return this.request<Topic>(`/admin/topics/${id}/`, {
-      method: 'PUT',
-      body: JSON.stringify(topic),
-    });
-  }
-
-  async deleteAdminTopic(id: number): Promise<void> {
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     const url = `${API_URL}/admin/topics/${id}/`;
     const response = await fetch(url, {
       method: 'DELETE',
@@ -519,7 +439,6 @@ class ApiService {
     return;
   }
 
-<<<<<<< HEAD
   // Admin Round endpoints
   async getAdminRounds(topicId?: number, level?: string): Promise<Round[]> {
     try {
@@ -586,8 +505,7 @@ class ApiService {
     return;
   }
 
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
+
   // Admin user endpoints
   async updateAdminUser(id: number, userData: {
     is_active?: boolean;
@@ -643,9 +561,5 @@ class ApiService {
 }
 
 export const apiService = new ApiService();
-<<<<<<< HEAD
 export type { UserProfile, Course, Round, Question, InterviewSession, Answer };
-=======
-export type { UserProfile, Topic, Question, InterviewSession, Answer };
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
