@@ -8,7 +8,6 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-
     /* OHG Brand Colors HSL Conversion */
     /* Navy #0A2A43 -> 206 74% 15% */
     /* Orange #F26123 -> 18 89% 54% */
@@ -69,12 +68,10 @@ All colors MUST be HSL.
     --glow-pink: 0 0 15px hsl(18 89% 54% / 0.2);
     --glow-purple: 0 0 15px hsl(206 74% 15% / 0.2);
 
-
     /* Transitions */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
-
 
   .dark {
     /* OHG Dark Mode mapping */
@@ -114,7 +111,6 @@ All colors MUST be HSL.
 
     --gradient-background: linear-gradient(180deg, #0A2A43 0%, #051525 100%);
   }
-
 }
 
 @layer base {
@@ -231,7 +227,3 @@ All colors MUST be HSL.
     }
   }
 }
-
-/* Re-trigger build cleanup */
-
-/* Re-trigger build */

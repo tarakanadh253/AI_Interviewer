@@ -35,7 +35,6 @@ interface Round {
   updated_at: string;
 }
 
-
 interface Question {
   id: number;
   topic: number;
@@ -118,8 +117,7 @@ class ApiService {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({ error: response.statusText }));
-      // If there are detailed validation errors, include them
-      // If there are detailed validation errors, include them
+
       // Handle various DRF error formats
       if (errorData.errors) {
         // Format: { errors: { field: ["error"] } }
@@ -316,7 +314,6 @@ class ApiService {
       const query = params.toString();
       const result = await this.request<any>(`/admin/questions/${query ? `?${query}` : ''}`);
 
-
       if (Array.isArray(result)) {
         return result;
       } else if (result && Array.isArray(result.results)) {
@@ -505,7 +502,6 @@ class ApiService {
     return;
   }
 
-
   // Admin user endpoints
   async updateAdminUser(id: number, userData: {
     is_active?: boolean;
@@ -562,4 +558,3 @@ class ApiService {
 
 export const apiService = new ApiService();
 export type { UserProfile, Course, Round, Question, InterviewSession, Answer };
-

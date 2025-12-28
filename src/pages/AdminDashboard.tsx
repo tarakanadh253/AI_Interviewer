@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -31,7 +28,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-<<<<<<< HEAD
 import { Plus, Edit, Trash2, Users, FileText, Eye, EyeOff, RefreshCw, ExternalLink, BookOpen, Lock, ChevronDown, ChevronUp, ArrowLeft, LayoutList, LayoutGrid } from "lucide-react";
 import { apiService, type UserProfile, type Course, type Round, type Question, type InterviewSession } from "@/lib/api";
 import { useToast } from "@/hooks/use-toast";
@@ -75,47 +71,6 @@ const AdminDashboard = () => {
 
   const [showQuestionForm, setShowQuestionForm] = useState(false);
   const [showUserForm, setShowUserForm] = useState(false);
-=======
-import { Plus, Edit, Trash2, Users, FileText, Eye, EyeOff, RefreshCw, ExternalLink, BookOpen, Lock } from "lucide-react";
-import { apiService, type Question, type Topic } from "@/lib/api";
-import { useToast } from "@/hooks/use-toast";
-
-interface UserProfile {
-  id: number;
-  username: string;
-  email: string;
-  name: string | null;
-  is_active: boolean;
-  access_type: 'TRIAL' | 'FULL';
-  has_used_trial: boolean;
-  created_at: string;
-}
-
-interface InterviewSession {
-  id: number;
-  user: number;
-  user_email: string;
-  user_name: string | null;
-  started_at: string;
-  ended_at: string | null;
-  duration_seconds: number | null;
-  topics: number[];
-  topics_list: Array<{ id: number; name: string }>;
-  status: 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  communication_score: number | null;
-  technology_score: number | null;
-  result_summary: string | null;
-  answer_count: number;
-  created_at: string;
-  updated_at: string;
-}
-
-const AdminDashboard = () => {
-  const { toast } = useToast();
-  const [showQuestionForm, setShowQuestionForm] = useState(false);
-  const [showUserForm, setShowUserForm] = useState(false);
-  const [users, setUsers] = useState<UserProfile[]>([]);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   const [isLoadingUsers, setIsLoadingUsers] = useState(false);
 
   // User form state
@@ -125,10 +80,7 @@ const AdminDashboard = () => {
     email: "",
     name: "",
     is_active: true,
-<<<<<<< HEAD
     role: 'USER' as 'ADMIN' | 'USER',
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     access_type: 'TRIAL' as 'TRIAL' | 'FULL',
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -139,30 +91,20 @@ const AdminDashboard = () => {
   const [showUserDetails, setShowUserDetails] = useState(false);
   const [userSessions, setUserSessions] = useState<InterviewSession[]>([]);
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
-<<<<<<< HEAD
   const [selectedSessionId, setSelectedSessionId] = useState<number | null>(null);
   const [selectedSessionDetails, setSelectedSessionDetails] = useState<InterviewSession | null>(null);
   const [isLoadingSessionDetails, setIsLoadingSessionDetails] = useState(false);
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   const [newPassword, setNewPassword] = useState("");
   const [showPasswordChange, setShowPasswordChange] = useState(false);
 
   // Questions state
   const [questions, setQuestions] = useState<Question[]>([]);
-<<<<<<< HEAD
   const [topics, setTopics] = useState<Course[]>([]); // Changed from Topic[] to Course[]
-=======
-  const [topics, setTopics] = useState<Topic[]>([]);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   const [isLoadingQuestions, setIsLoadingQuestions] = useState(false);
   const [questionFormData, setQuestionFormData] = useState({
     source_type: "MANUAL" as "MANUAL" | "LINK",
     topic: "",
-<<<<<<< HEAD
     round: "",
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     question_text: "",
     ideal_answer: "",
     difficulty: "MEDIUM" as "EASY" | "MEDIUM" | "HARD",
@@ -171,23 +113,17 @@ const AdminDashboard = () => {
   });
   const [editingQuestion, setEditingQuestion] = useState<Question | null>(null);
 
-<<<<<<< HEAD
   const [selectedCourseFilter, setSelectedCourseFilter] = useState<string>("ALL");
 
   // Topics state
   const [isLoadingTopics, setIsLoadingTopics] = useState(false);
   const [expandedCourseId, setExpandedCourseId] = useState<number | null>(null);
 
-=======
-  // Topics state
-  const [isLoadingTopics, setIsLoadingTopics] = useState(false);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   const [showTopicForm, setShowTopicForm] = useState(false);
   const [topicFormData, setTopicFormData] = useState({
     name: "",
     description: "",
   });
-<<<<<<< HEAD
   const [editingTopic, setEditingTopic] = useState<Course | null>(null); // Changed from Topic | null to Course | null
 
   // Rounds State
@@ -206,9 +142,6 @@ const AdminDashboard = () => {
   useEffect(() => {
     setViewMode("grid");
   }, []);
-=======
-  const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
 
   // Fetch users on component mount
   useEffect(() => {
@@ -283,7 +216,6 @@ const AdminDashboard = () => {
     }
   };
 
-<<<<<<< HEAD
   const handleViewSessionDetails = async (sessionId: number) => {
     if (selectedSessionId === sessionId) {
       // Toggle off
@@ -309,8 +241,6 @@ const AdminDashboard = () => {
     }
   };
 
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   const handleResetTrial = async (userId: number) => {
     if (!confirm("Are you sure you want to reset the trial status for this user?")) return;
 
@@ -446,7 +376,6 @@ const AdminDashboard = () => {
 
     setIsCreatingUser(true);
     try {
-<<<<<<< HEAD
       // 1. Create User in Supabase Auth (Sends Confirmation Email)
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: userFormData.email,
@@ -474,20 +403,14 @@ const AdminDashboard = () => {
       }
 
       // 2. Create User in Backend Database
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       await apiService.createUser({
         username: userFormData.username,
         password: userFormData.password,
         email: userFormData.email,
         name: userFormData.name || undefined,
         is_active: userFormData.is_active,
-<<<<<<< HEAD
         role: userFormData.role,
         access_type: userFormData.role === 'USER' ? userFormData.access_type : undefined,
-=======
-        access_type: userFormData.access_type,
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       });
 
       toast({
@@ -503,10 +426,7 @@ const AdminDashboard = () => {
         email: "",
         name: "",
         is_active: true,
-<<<<<<< HEAD
         role: 'USER',
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         access_type: 'TRIAL',
       });
       setShowUserForm(false);
@@ -526,7 +446,6 @@ const AdminDashboard = () => {
   };
 
   const fetchQuestions = async () => {
-<<<<<<< HEAD
     // Only fetch if we have a selected round or at least a course
     if (!expandedCourseId) return;
 
@@ -535,11 +454,6 @@ const AdminDashboard = () => {
       // If a round is selected, filter by it. Otherwise filter by course.
       const roundId = selectedRound ? selectedRound.id : undefined;
       const data = await apiService.getAdminQuestions(expandedCourseId, roundId);
-=======
-    setIsLoadingQuestions(true);
-    try {
-      const data = await apiService.getAdminQuestions();
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       setQuestions(data);
     } catch (error) {
       console.error("Error fetching questions:", error);
@@ -553,7 +467,6 @@ const AdminDashboard = () => {
     }
   };
 
-<<<<<<< HEAD
   const fetchRounds = async (topicId: number, level: string) => {
     setIsLoadingRounds(true);
     try {
@@ -575,22 +488,12 @@ const AdminDashboard = () => {
     setIsLoadingTopics(true);
     try {
       const data = await apiService.getAdminCourses(); // Changed to getAdminCourses
-=======
-  const fetchTopics = async () => {
-    setIsLoadingTopics(true);
-    try {
-      const data = await apiService.getAdminTopics();
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       setTopics(data);
     } catch (error) {
       console.error("Error fetching topics:", error);
       toast({
         title: "Error",
-<<<<<<< HEAD
         description: (error as Error).message || "Failed to fetch courses", // Changed description
-=======
-        description: (error as Error).message || "Failed to fetch topics",
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         variant: "destructive",
       });
     } finally {
@@ -602,11 +505,7 @@ const AdminDashboard = () => {
     if (!topicFormData.name || !topicFormData.name.trim()) {
       toast({
         title: "Validation Error",
-<<<<<<< HEAD
         description: "Course name is required",
-=======
-        description: "Topic name is required",
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         variant: "destructive",
       });
       return;
@@ -614,7 +513,6 @@ const AdminDashboard = () => {
 
     try {
       if (editingTopic) {
-<<<<<<< HEAD
         await apiService.updateAdminCourse(editingTopic.id, topicFormData); // Changed to updateAdminCourse
         toast({
           title: "Success",
@@ -625,30 +523,12 @@ const AdminDashboard = () => {
         toast({
           title: "Success",
           description: "Course created successfully", // Changed description
-=======
-        await apiService.updateAdminTopic(editingTopic.id, topicFormData);
-        toast({
-          title: "Success",
-          description: "Topic updated successfully",
-        });
-      } else {
-        await apiService.createAdminTopic(topicFormData);
-        toast({
-          title: "Success",
-          description: "Topic created successfully",
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         });
       }
       setShowTopicForm(false);
       setEditingTopic(null);
       setTopicFormData({ name: "", description: "" });
       fetchTopics();
-<<<<<<< HEAD
-=======
-      // Also refresh topics for question form
-      const allTopics = await apiService.getTopics();
-      setTopics(allTopics);
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
     } catch (error: any) {
       toast({
         title: "Error",
@@ -659,7 +539,6 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteTopic = async (id: number) => {
-<<<<<<< HEAD
     if (!confirm("Are you sure you want to delete this course? This will also delete all levels, rounds and questions associated with it.")) return; // Changed confirmation message
 
     try {
@@ -746,24 +625,6 @@ const AdminDashboard = () => {
       toast({
         title: "Error",
         description: error.message || "Failed to delete round",
-=======
-    if (!confirm("Are you sure you want to delete this topic? This will also delete all questions associated with it.")) return;
-
-    try {
-      await apiService.deleteAdminTopic(id);
-      toast({
-        title: "Success",
-        description: "Topic deleted successfully",
-      });
-      fetchTopics();
-      // Refresh topics for question form
-      const allTopics = await apiService.getTopics();
-      setTopics(allTopics);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to delete topic",
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         variant: "destructive",
       });
     }
@@ -771,7 +632,6 @@ const AdminDashboard = () => {
 
   const handleCreateQuestion = async () => {
     // Validate based on source_type
-<<<<<<< HEAD
     if (!expandedCourseId) {
       toast({
         title: "Validation Error",
@@ -785,12 +645,6 @@ const AdminDashboard = () => {
       toast({
         title: "Validation Error",
         description: "Please select a round",
-=======
-    if (!questionFormData.topic) {
-      toast({
-        title: "Validation Error",
-        description: "Please select a topic",
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         variant: "destructive",
       });
       return;
@@ -812,15 +666,10 @@ const AdminDashboard = () => {
           description: "Reference links are required when using link-based definition",
           variant: "destructive",
         });
-<<<<<<< HEAD
-=======
-        return;
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       }
     }
 
     try {
-<<<<<<< HEAD
       if (editingQuestion) {
         await apiService.updateAdminQuestion(editingQuestion.id, {
           source_type: questionFormData.source_type,
@@ -852,30 +701,12 @@ const AdminDashboard = () => {
         });
       }
 
-=======
-      await apiService.createAdminQuestion({
-        topic: parseInt(questionFormData.topic),
-        source_type: questionFormData.source_type,
-        question_text: questionFormData.source_type === "MANUAL" ? questionFormData.question_text : undefined,
-        ideal_answer: questionFormData.source_type === "MANUAL" ? questionFormData.ideal_answer : undefined,
-        difficulty: questionFormData.difficulty,
-        is_active: questionFormData.is_active,
-        reference_links: questionFormData.source_type === "LINK" ? questionFormData.reference_links : (questionFormData.reference_links || undefined),
-      });
-      toast({
-        title: "Success",
-        description: "Question created successfully",
-      });
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
       setShowQuestionForm(false);
       setEditingQuestion(null);
       setQuestionFormData({
         source_type: "MANUAL",
         topic: "",
-<<<<<<< HEAD
         round: "",
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         question_text: "",
         ideal_answer: "",
         difficulty: "MEDIUM",
@@ -886,11 +717,7 @@ const AdminDashboard = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-<<<<<<< HEAD
         description: error.message || "Failed to save question",
-=======
-        description: error.message || "Failed to create question",
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
         variant: "destructive",
       });
     }
@@ -916,7 +743,6 @@ const AdminDashboard = () => {
   };
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-background text-foreground p-4 md:p-6 font-sans">
       <div className="max-w-7xl mx-auto">
         <div className="mb-8 flex justify-between items-start">
@@ -938,8 +764,8 @@ const AdminDashboard = () => {
         </div>
 
         <Tabs defaultValue="users" className="space-y-6" onValueChange={setActiveTab}>
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
-            <TabsList className="bg-transparent p-0 gap-2 border-none flex-wrap">
+          <div className="flex items-center justify-between mb-8">
+            <TabsList className="bg-transparent p-0 gap-2 border-none">
               <TabsTrigger
                 value="users"
                 className="
@@ -967,7 +793,7 @@ const AdminDashboard = () => {
             </TabsList>
 
             {activeTab === 'topics' && expandedCourseId === null && (
-              <div className="flex bg-white/50 border border-gray-200/50 p-1 rounded-lg self-end md:self-auto">
+              <div className="flex bg-white/50 border border-gray-200/50 p-1 rounded-lg">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -1000,41 +826,6 @@ const AdminDashboard = () => {
                 <Button
                   onClick={() => setShowUserForm(!showUserForm)}
                   className="bg-ohg-navy text-white hover:bg-ohg-navy/90"
-=======
-    <div className="min-h-screen bg-slate-950 text-slate-200 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2 tracking-tight">
-            Admin Dashboard
-          </h1>
-          <p className="text-slate-400">
-            Manage interviews, questions, and user results
-          </p>
-        </div>
-
-        <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="bg-slate-900 border border-slate-800">
-            <TabsTrigger value="users" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
-              <Users className="h-4 w-4 mr-2" />
-              Users & Results
-            </TabsTrigger>
-            <TabsTrigger value="topics" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
-              <BookOpen className="h-4 w-4 mr-2" />
-              Topics
-            </TabsTrigger>
-            <TabsTrigger value="questions" className="data-[state=active]:bg-slate-800 data-[state=active]:text-white text-slate-400">
-              <FileText className="h-4 w-4 mr-2" />
-              Question Bank
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="users">
-            <div className="space-y-4">
-              <div className="flex justify-end">
-                <Button
-                  onClick={() => setShowUserForm(!showUserForm)}
-                  className="bg-white text-slate-950 hover:bg-slate-200"
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Add User
@@ -1042,11 +833,7 @@ const AdminDashboard = () => {
               </div>
 
               {showUserForm && (
-<<<<<<< HEAD
                 <Card className="p-4 md:p-6 bg-white/80 backdrop-blur-lg border-border shadow-soft animate-slide-up">
-=======
-                <Card className="p-6 bg-card/50 backdrop-blur-lg border-primary/20 animate-slide-up">
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                   <h3 className="text-lg font-semibold text-foreground mb-4">
                     Create New User
                   </h3>
@@ -1112,7 +899,6 @@ const AdminDashboard = () => {
                     </div>
                     <div>
                       <label className="text-sm text-foreground mb-2 block">
-<<<<<<< HEAD
                         Role <span className="text-destructive">*</span>
                       </label>
                       <Select
@@ -1157,30 +943,6 @@ const AdminDashboard = () => {
                         </p>
                       </div>
                     )}
-=======
-                        Access Type <span className="text-destructive">*</span>
-                      </label>
-                      <Select
-                        value={userFormData.access_type}
-                        onValueChange={(value: 'TRIAL' | 'FULL') =>
-                          setUserFormData({ ...userFormData, access_type: value })
-                        }
-                      >
-                        <SelectTrigger className="bg-input border-border text-foreground">
-                          <SelectValue placeholder="Select access type" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="TRIAL">Trial - One Free Interview</SelectItem>
-                          <SelectItem value="FULL">Full Access (Admin)</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {userFormData.access_type === 'TRIAL'
-                          ? 'User will get one free interview'
-                          : 'User can create unlimited interview sessions and access admin features if authorized'}
-                      </p>
-                    </div>
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -1203,10 +965,7 @@ const AdminDashboard = () => {
                             email: "",
                             name: "",
                             is_active: true,
-<<<<<<< HEAD
                             role: 'USER',
-=======
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                             access_type: 'TRIAL',
                           });
                         }}
@@ -1218,11 +977,7 @@ const AdminDashboard = () => {
                       </Button>
                       <Button
                         onClick={handleCreateUser}
-<<<<<<< HEAD
                         className="flex-1 bg-ohg-navy hover:bg-ohg-navy/90 text-white"
-=======
-                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                         disabled={isCreatingUser}
                       >
                         {isCreatingUser ? "Creating..." : "Create User"}
@@ -1232,11 +987,7 @@ const AdminDashboard = () => {
                 </Card>
               )}
 
-<<<<<<< HEAD
               <Card className="p-4 md:p-6 bg-white/60 backdrop-blur-lg border-border shadow-sm">
-=======
-              <Card className="p-6 bg-card/30 backdrop-blur-lg border-border">
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                 {isLoadingUsers ? (
                   <div className="text-center py-8 text-muted-foreground">
                     Loading users...
@@ -1246,118 +997,19 @@ const AdminDashboard = () => {
                     No users found. Create your first user above.
                   </div>
                 ) : (
-<<<<<<< HEAD
-                  <div className="overflow-x-auto">
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-border hover:bg-muted/20">
-                          <TableHead className="text-foreground">Username</TableHead>
-                          <TableHead className="text-foreground">Name</TableHead>
-                          <TableHead className="text-foreground">Email</TableHead>
-                          <TableHead className="text-foreground">Role</TableHead>
-                          {users.some(u => u.role === 'USER') && (
-                            <>
-                              <TableHead className="text-foreground">Access Type</TableHead>
-                              <TableHead className="text-foreground">Trial Used</TableHead>
-                            </>
-                          )}
-                          <TableHead className="text-foreground">Created</TableHead>
-                          <TableHead className="text-foreground">Actions</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {Array.isArray(users) && users.map((user) => (
-                          <TableRow key={user.id} className="border-border hover:bg-muted/20">
-                            <TableCell className="text-foreground font-medium">{user.username}</TableCell>
-                            <TableCell className="text-foreground">{user.name || "-"}</TableCell>
-                            <TableCell className="text-muted-foreground">{user.email}</TableCell>
-                            <TableCell>
-                              <span className={`px-2 py-1 rounded text-xs ${user.role === 'ADMIN' ? 'bg-purple-500/20 text-purple-500' : 'bg-blue-500/20 text-blue-500'}`}>
-                                {user.role === 'ADMIN' ? 'Admin' : 'User'}
-                              </span>
-                            </TableCell>
-
-                            {users.some(u => u.role === 'USER') && (
-                              <>
-                                <TableCell>
-                                  {user.role === 'ADMIN' ? (
-                                    <span className="text-muted-foreground text-xs">-</span>
-                                  ) : (
-                                    <span
-                                      className={`px-2 py-1 rounded text-xs ${user.access_type === 'FULL'
-                                        ? "bg-primary/20 text-primary font-medium"
-                                        : "bg-secondary/20 text-secondary"
-                                        }`}
-                                    >
-                                      {user.access_type === 'FULL' ? 'Full Access' : 'Trial'}
-                                    </span>
-                                  )}
-                                </TableCell>
-                                <TableCell>
-                                  {user.role === 'ADMIN' ? (
-                                    <span className="text-muted-foreground text-xs">-</span>
-                                  ) : (
-                                    <span
-                                      className={`px-2 py-1 rounded text-xs ${user.has_used_trial
-                                        ? "bg-secondary/20 text-secondary"
-                                        : "bg-primary/20 text-primary"
-                                        }`}
-                                    >
-                                      {user.has_used_trial ? "Yes" : "No"}
-                                    </span>
-                                  )}
-                                </TableCell>
-                              </>
-                            )}
-
-                            <TableCell>
-                              <span
-                                className={`px-2 py-1 rounded text-xs ${user.is_active
-                                  ? "bg-primary/20 text-primary"
-                                  : "bg-muted text-muted-foreground"
-                                  }`}
-                              >
-                                {user.is_active ? "Active" : "Inactive"}
-                              </span>
-                            </TableCell>
-                            <TableCell className="text-muted-foreground text-sm">
-                              {new Date(user.created_at).toLocaleDateString()}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-2">
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="hover:bg-primary/10"
-                                  onClick={() => handleViewUserDetails(user)}
-                                >
-                                  View Details
-                                </Button>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  className="hover:bg-destructive/10"
-                                  onClick={() => handleDeleteUser(user.id)}
-                                >
-                                  <Trash2 className="h-4 w-4 text-destructive" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-=======
                   <Table>
                     <TableHeader>
                       <TableRow className="border-border hover:bg-muted/20">
                         <TableHead className="text-foreground">Username</TableHead>
                         <TableHead className="text-foreground">Name</TableHead>
                         <TableHead className="text-foreground">Email</TableHead>
-                        <TableHead className="text-foreground">Access Type</TableHead>
-                        <TableHead className="text-foreground">Status</TableHead>
-                        <TableHead className="text-foreground">Trial Used</TableHead>
+                        <TableHead className="text-foreground">Role</TableHead>
+                        {users.some(u => u.role === 'USER') && (
+                          <>
+                            <TableHead className="text-foreground">Access Type</TableHead>
+                            <TableHead className="text-foreground">Trial Used</TableHead>
+                          </>
+                        )}
                         <TableHead className="text-foreground">Created</TableHead>
                         <TableHead className="text-foreground">Actions</TableHead>
                       </TableRow>
@@ -1369,15 +1021,44 @@ const AdminDashboard = () => {
                           <TableCell className="text-foreground">{user.name || "-"}</TableCell>
                           <TableCell className="text-muted-foreground">{user.email}</TableCell>
                           <TableCell>
-                            <span
-                              className={`px-2 py-1 rounded text-xs ${user.access_type === 'FULL'
-                                ? "bg-primary/20 text-primary font-medium"
-                                : "bg-secondary/20 text-secondary"
-                                }`}
-                            >
-                              {user.access_type === 'FULL' ? 'Full Access' : 'Trial'}
+                            <span className={`px-2 py-1 rounded text-xs ${user.role === 'ADMIN' ? 'bg-purple-500/20 text-purple-500' : 'bg-blue-500/20 text-blue-500'}`}>
+                              {user.role === 'ADMIN' ? 'Admin' : 'User'}
                             </span>
                           </TableCell>
+
+                          {users.some(u => u.role === 'USER') && (
+                            <>
+                              <TableCell>
+                                {user.role === 'ADMIN' ? (
+                                  <span className="text-muted-foreground text-xs">-</span>
+                                ) : (
+                                  <span
+                                    className={`px-2 py-1 rounded text-xs ${user.access_type === 'FULL'
+                                      ? "bg-primary/20 text-primary font-medium"
+                                      : "bg-secondary/20 text-secondary"
+                                      }`}
+                                  >
+                                    {user.access_type === 'FULL' ? 'Full Access' : 'Trial'}
+                                  </span>
+                                )}
+                              </TableCell>
+                              <TableCell>
+                                {user.role === 'ADMIN' ? (
+                                  <span className="text-muted-foreground text-xs">-</span>
+                                ) : (
+                                  <span
+                                    className={`px-2 py-1 rounded text-xs ${user.has_used_trial
+                                      ? "bg-secondary/20 text-secondary"
+                                      : "bg-primary/20 text-primary"
+                                      }`}
+                                  >
+                                    {user.has_used_trial ? "Yes" : "No"}
+                                  </span>
+                                )}
+                              </TableCell>
+                            </>
+                          )}
+
                           <TableCell>
                             <span
                               className={`px-2 py-1 rounded text-xs ${user.is_active
@@ -1386,16 +1067,6 @@ const AdminDashboard = () => {
                                 }`}
                             >
                               {user.is_active ? "Active" : "Inactive"}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <span
-                              className={`px-2 py-1 rounded text-xs ${user.has_used_trial
-                                ? "bg-secondary/20 text-secondary"
-                                : "bg-primary/20 text-primary"
-                                }`}
-                            >
-                              {user.has_used_trial ? "Yes" : "No"}
                             </span>
                           </TableCell>
                           <TableCell className="text-muted-foreground text-sm">
@@ -1425,7 +1096,6 @@ const AdminDashboard = () => {
                       ))}
                     </TableBody>
                   </Table>
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                 )}
               </Card>
             </div>
@@ -1433,7 +1103,6 @@ const AdminDashboard = () => {
 
           <TabsContent value="topics">
             <div className="space-y-4">
-<<<<<<< HEAD
               {expandedCourseId === null ? (
                 /* -------------------------------------------------------------------------- */
                 /*                            COURSE LIST VIEW                                */
@@ -1503,64 +1172,62 @@ const AdminDashboard = () => {
                       ) : topics.length === 0 ? (
                         <div className="text-center py-8 text-muted-foreground">No courses found. Add your first course above.</div>
                       ) : (
-                        <div className="overflow-x-auto">
-                          <Table>
-                            <TableHeader>
-                              <TableRow className="border-border hover:bg-muted/20">
-                                <TableHead className="text-foreground">Course Name</TableHead>
-                                <TableHead className="text-foreground">Description</TableHead>
-                                <TableHead className="text-foreground">Created</TableHead>
-                                <TableHead className="text-foreground">Actions</TableHead>
+                        <Table>
+                          <TableHeader>
+                            <TableRow className="border-border hover:bg-muted/20">
+                              <TableHead className="text-foreground">Course Name</TableHead>
+                              <TableHead className="text-foreground">Description</TableHead>
+                              <TableHead className="text-foreground">Created</TableHead>
+                              <TableHead className="text-foreground">Actions</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {topics.map((topic) => (
+                              <TableRow
+                                key={topic.id}
+                                className="border-border hover:bg-muted/20 cursor-pointer group"
+                                onClick={() => setExpandedCourseId(topic.id)}
+                              >
+                                <TableCell className="text-foreground font-medium group-hover:text-primary transition-colors">
+                                  {topic.name}
+                                </TableCell>
+                                <TableCell className="text-foreground">
+                                  {topic.description || <span className="text-muted-foreground">No description</span>}
+                                </TableCell>
+                                <TableCell className="text-muted-foreground text-sm">
+                                  {new Date(topic.created_at).toLocaleDateString()}
+                                </TableCell>
+                                <TableCell onClick={(e) => e.stopPropagation()}>
+                                  <div className="flex gap-2">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="hover:bg-primary/10"
+                                      onClick={() => {
+                                        setEditingTopic(topic);
+                                        setTopicFormData({
+                                          name: topic.name,
+                                          description: topic.description || "",
+                                        });
+                                        setShowTopicForm(true);
+                                      }}
+                                    >
+                                      <Edit className="h-4 w-4" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="hover:bg-destructive/10"
+                                      onClick={() => handleDeleteTopic(topic.id)}
+                                    >
+                                      <Trash2 className="h-4 w-4 text-destructive" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
                               </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                              {topics.map((topic) => (
-                                <TableRow
-                                  key={topic.id}
-                                  className="border-border hover:bg-muted/20 cursor-pointer group"
-                                  onClick={() => setExpandedCourseId(topic.id)}
-                                >
-                                  <TableCell className="text-foreground font-medium group-hover:text-primary transition-colors">
-                                    {topic.name}
-                                  </TableCell>
-                                  <TableCell className="text-foreground">
-                                    {topic.description || <span className="text-muted-foreground">No description</span>}
-                                  </TableCell>
-                                  <TableCell className="text-muted-foreground text-sm">
-                                    {new Date(topic.created_at).toLocaleDateString()}
-                                  </TableCell>
-                                  <TableCell onClick={(e) => e.stopPropagation()}>
-                                    <div className="flex gap-2">
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="hover:bg-primary/10"
-                                        onClick={() => {
-                                          setEditingTopic(topic);
-                                          setTopicFormData({
-                                            name: topic.name,
-                                            description: topic.description || "",
-                                          });
-                                          setShowTopicForm(true);
-                                        }}
-                                      >
-                                        <Edit className="h-4 w-4" />
-                                      </Button>
-                                      <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="hover:bg-destructive/10"
-                                        onClick={() => handleDeleteTopic(topic.id)}
-                                      >
-                                        <Trash2 className="h-4 w-4 text-destructive" />
-                                      </Button>
-                                    </div>
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
+                            ))}
+                          </TableBody>
+                        </Table>
                       )}
                     </Card>
                   ) : (
@@ -1959,497 +1626,85 @@ const AdminDashboard = () => {
                             No questions for this round yet.
                           </div>
                         ) : (
-                          <div className="overflow-x-auto">
-                            <Table>
-                              <TableHeader>
-                                <TableRow className="border-border hover:bg-muted/20">
-                                  <TableHead className="w-[40%] text-foreground">Question</TableHead>
-                                  <TableHead className="text-foreground">Difficulty</TableHead>
-                                  <TableHead className="text-foreground">Type</TableHead>
-                                  <TableHead className="text-foreground">Status</TableHead>
-                                  <TableHead className="text-right text-foreground">Actions</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {questions
-                                  .map((q) => (
-                                    <TableRow key={q.id} className="border-border hover:bg-muted/20">
-                                      <TableCell className="font-medium max-w-md truncate text-foreground" title={q.question_text}>
-                                        {q.question_text || "Link based content"}
-                                      </TableCell>
-                                      <TableCell>
-                                        <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${q.difficulty === 'EASY' ? 'bg-green-100 text-green-700 border-green-200' :
-                                          q.difficulty === 'MEDIUM' ? 'bg-amber-100 text-amber-700 border-amber-200' :
-                                            'bg-red-100 text-red-700 border-red-200'
-                                          }`}>
-                                          {q.difficulty}
-                                        </span>
-                                      </TableCell>
-                                      <TableCell className="text-xs text-muted-foreground">{q.source_type}</TableCell>
-                                      <TableCell>
-                                        <span className={`w-2 h-2 rounded-full inline-block mr-2 ${q.is_active ? 'bg-emerald-500' : 'bg-gray-300'}`} />
-                                        <span className="text-xs text-muted-foreground">{q.is_active ? 'Active' : 'Inactive'}</span>
-                                      </TableCell>
-                                      <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="hover:bg-primary/10"
-                                            onClick={() => {
-                                              setEditingQuestion(q);
-                                              setQuestionFormData({
-                                                source_type: q.source_type || "MANUAL",
-                                                topic: q.topic.toString(),
-                                                round: q.round?.toString() || selectedRound.id.toString(),
-                                                question_text: q.question_text,
-                                                ideal_answer: q.ideal_answer,
-                                                difficulty: q.difficulty,
-                                                reference_links: q.reference_links || "",
-                                                is_active: q.is_active,
-                                              });
-                                              setShowQuestionForm(true);
-                                            }}
-                                          >
-                                            <Edit className="h-4 w-4" />
-                                          </Button>
-                                          <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="hover:bg-destructive/10"
-                                            onClick={() => handleDeleteQuestion(q.id)}
-                                          >
-                                            <Trash2 className="h-4 w-4 text-destructive" />
-                                          </Button>
-                                        </div>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                              </TableBody>
-                            </Table>
-                          </div>
+                          <Table>
+                            <TableHeader>
+                              <TableRow className="border-border hover:bg-muted/20">
+                                <TableHead className="w-[40%] text-foreground">Question</TableHead>
+                                <TableHead className="text-foreground">Difficulty</TableHead>
+                                <TableHead className="text-foreground">Type</TableHead>
+                                <TableHead className="text-foreground">Status</TableHead>
+                                <TableHead className="text-right text-foreground">Actions</TableHead>
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {questions
+                                .map((q) => (
+                                  <TableRow key={q.id} className="border-border hover:bg-muted/20">
+                                    <TableCell className="font-medium max-w-md truncate text-foreground" title={q.question_text}>
+                                      {q.question_text || "Link based content"}
+                                    </TableCell>
+                                    <TableCell>
+                                      <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${q.difficulty === 'EASY' ? 'bg-green-100 text-green-700 border-green-200' :
+                                        q.difficulty === 'MEDIUM' ? 'bg-amber-100 text-amber-700 border-amber-200' :
+                                          'bg-red-100 text-red-700 border-red-200'
+                                        }`}>
+                                        {q.difficulty}
+                                      </span>
+                                    </TableCell>
+                                    <TableCell className="text-xs text-muted-foreground">{q.source_type}</TableCell>
+                                    <TableCell>
+                                      <span className={`w-2 h-2 rounded-full inline-block mr-2 ${q.is_active ? 'bg-emerald-500' : 'bg-gray-300'}`} />
+                                      <span className="text-xs text-muted-foreground">{q.is_active ? 'Active' : 'Inactive'}</span>
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                      <div className="flex justify-end gap-2">
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="hover:bg-primary/10"
+                                          onClick={() => {
+                                            setEditingQuestion(q);
+                                            setQuestionFormData({
+                                              source_type: q.source_type || "MANUAL",
+                                              topic: q.topic.toString(),
+                                              round: q.round?.toString() || selectedRound.id.toString(),
+                                              question_text: q.question_text,
+                                              ideal_answer: q.ideal_answer,
+                                              difficulty: q.difficulty,
+                                              reference_links: q.reference_links || "",
+                                              is_active: q.is_active,
+                                            });
+                                            setShowQuestionForm(true);
+                                          }}
+                                        >
+                                          <Edit className="h-4 w-4" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          className="hover:bg-destructive/10"
+                                          onClick={() => handleDeleteQuestion(q.id)}
+                                        >
+                                          <Trash2 className="h-4 w-4 text-destructive" />
+                                        </Button>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                            </TableBody>
+                          </Table>
                         )}
                       </Card>
                     </div>
                   )}
                 </div>
               )}
-=======
-              <div className="flex justify-end">
-                <Button
-                  onClick={() => setShowTopicForm(!showTopicForm)}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground glow-cyan"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Topic
-                </Button>
-              </div>
-
-              {showTopicForm && (
-                <Card className="p-6 bg-card/50 backdrop-blur-lg border-primary/20 animate-slide-up">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">
-                    {editingTopic ? "Edit Topic" : "Add New Topic"}
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm text-foreground mb-2 block">Topic Name *</label>
-                      <Input
-                        placeholder="e.g., Machine Learning, React, System Design"
-                        className="bg-input border-border text-foreground"
-                        value={topicFormData.name}
-                        onChange={(e) => setTopicFormData({ ...topicFormData, name: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-2 block">Description (Optional)</label>
-                      <Textarea
-                        placeholder="Brief description of this topic..."
-                        className="bg-input border-border min-h-[80px]"
-                        value={topicFormData.description}
-                        onChange={(e) => setTopicFormData({ ...topicFormData, description: e.target.value })}
-                      />
-                    </div>
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => {
-                          setShowTopicForm(false);
-                          setEditingTopic(null);
-                          setTopicFormData({ name: "", description: "" });
-                        }}
-                        variant="outline"
-                        className="flex-1"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleCreateTopic}
-                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                      >
-                        {editingTopic ? "Update Topic" : "Save Topic"}
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              )}
-
-              <Card className="p-6 bg-card/30 backdrop-blur-lg border-border">
-                {isLoadingTopics ? (
-                  <div className="text-center py-8 text-muted-foreground">Loading topics...</div>
-                ) : topics.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">No topics found. Add your first topic above.</div>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-border hover:bg-muted/20">
-                        <TableHead className="text-foreground">Topic Name</TableHead>
-                        <TableHead className="text-foreground">Description</TableHead>
-                        <TableHead className="text-foreground">Questions</TableHead>
-                        <TableHead className="text-foreground">Created</TableHead>
-                        <TableHead className="text-foreground">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {topics.map((topic) => (
-                        <TableRow key={topic.id} className="border-border hover:bg-muted/20">
-                          <TableCell className="text-foreground font-medium">{topic.name}</TableCell>
-                          <TableCell className="text-foreground">
-                            {topic.description || <span className="text-muted-foreground">No description</span>}
-                          </TableCell>
-                          <TableCell>
-                            <span className="px-2 py-1 rounded text-xs bg-primary/20 text-primary">
-                              {topic.question_count || 0} questions
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-muted-foreground text-sm">
-                            {new Date(topic.created_at).toLocaleDateString()}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="hover:bg-primary/10"
-                                onClick={() => {
-                                  setEditingTopic(topic);
-                                  setTopicFormData({
-                                    name: topic.name,
-                                    description: topic.description || "",
-                                  });
-                                  setShowTopicForm(true);
-                                }}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="hover:bg-destructive/10"
-                                onClick={() => handleDeleteTopic(topic.id)}
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="questions">
-            <div className="space-y-4">
-              <div className="flex justify-end">
-                <Button
-                  onClick={() => setShowQuestionForm(!showQuestionForm)}
-                  className="bg-primary hover:bg-primary/90 text-primary-foreground glow-cyan"
-                >
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Question
-                </Button>
-              </div>
-
-              {showQuestionForm && (
-                <Card className="p-6 bg-card/50 backdrop-blur-lg border-primary/20 animate-slide-up">
-                  <h3 className="text-lg font-semibold text-foreground mb-4">
-                    {editingQuestion ? "Edit Question" : "Add New Question"}
-                  </h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm text-foreground mb-2 block">Source Type *</label>
-                      <Select
-                        value={questionFormData.source_type}
-                        onValueChange={(value: "MANUAL" | "LINK") =>
-                          setQuestionFormData({ ...questionFormData, source_type: value })
-                        }
-                      >
-                        <SelectTrigger className="bg-input border-border text-foreground">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="MANUAL">Manually Define Q&A</SelectItem>
-                          <SelectItem value="LINK">Use External Links</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {questionFormData.source_type === "MANUAL"
-                          ? "Enter the question and answer directly"
-                          : "Provide links to websites containing questions and answers"}
-                      </p>
-                    </div>
-                    <div>
-                      <label className="text-sm text-foreground mb-2 block">Topic *</label>
-                      <Select
-                        value={questionFormData.topic}
-                        onValueChange={(value) => setQuestionFormData({ ...questionFormData, topic: value })}
-                      >
-                        <SelectTrigger className="bg-input border-border text-foreground">
-                          <SelectValue placeholder="Select a topic" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {topics.map((topic) => (
-                            <SelectItem key={topic.id} value={topic.id.toString()}>
-                              {topic.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    {questionFormData.source_type === "MANUAL" && (
-                      <>
-                        <div>
-                          <label className="text-sm text-foreground mb-2 block">Question *</label>
-                          <Textarea
-                            placeholder="Enter the interview question..."
-                            className="bg-input border-border min-h-[100px]"
-                            value={questionFormData.question_text}
-                            onChange={(e) => setQuestionFormData({ ...questionFormData, question_text: e.target.value })}
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm text-foreground mb-2 block">Ideal Answer *</label>
-                          <Textarea
-                            placeholder="Enter the ideal answer with key points..."
-                            className="bg-input border-border min-h-[100px]"
-                            value={questionFormData.ideal_answer}
-                            onChange={(e) => setQuestionFormData({ ...questionFormData, ideal_answer: e.target.value })}
-                          />
-                        </div>
-                      </>
-                    )}
-                    <div>
-                      <label className="text-sm text-foreground mb-2 block">Difficulty *</label>
-                      <Select
-                        value={questionFormData.difficulty}
-                        onValueChange={(value: "EASY" | "MEDIUM" | "HARD") =>
-                          setQuestionFormData({ ...questionFormData, difficulty: value })
-                        }
-                      >
-                        <SelectTrigger className="bg-input border-border text-foreground">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="EASY">Easy</SelectItem>
-                          <SelectItem value="MEDIUM">Medium</SelectItem>
-                          <SelectItem value="HARD">Hard</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    {questionFormData.source_type === "LINK" && (
-                      <div>
-                        <label className="text-sm text-foreground mb-2 block">
-                          Reference Links *
-                        </label>
-                        <Textarea
-                          placeholder="Enter one URL per line. These links contain the questions and answers for the interview.&#10;Example:&#10;https://example.com/python-interview-questions&#10;https://example.com/python-answers"
-                          className="bg-input border-border min-h-[100px] font-mono text-sm"
-                          value={questionFormData.reference_links}
-                          onChange={(e) => setQuestionFormData({ ...questionFormData, reference_links: e.target.value })}
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Required when using link-based definition. Add URLs to websites containing relevant questions and answers. One URL per line.
-                        </p>
-                      </div>
-                    )}
-                    {questionFormData.source_type === "MANUAL" && (
-                      <div>
-                        <label className="text-sm text-foreground mb-2 block">
-                          Reference Links (Optional)
-                        </label>
-                        <Textarea
-                          placeholder="Optional: Add URLs for additional reference material.&#10;Example:&#10;https://example.com/python-docs"
-                          className="bg-input border-border min-h-[80px] font-mono text-sm"
-                          value={questionFormData.reference_links}
-                          onChange={(e) => setQuestionFormData({ ...questionFormData, reference_links: e.target.value })}
-                        />
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Optional: Add URLs to websites with additional reference material. One URL per line.
-                        </p>
-                      </div>
-                    )}
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => {
-                          setShowQuestionForm(false);
-                          setEditingQuestion(null);
-                          setQuestionFormData({
-                            source_type: "MANUAL",
-                            topic: "",
-                            question_text: "",
-                            ideal_answer: "",
-                            difficulty: "MEDIUM",
-                            reference_links: "",
-                            is_active: true,
-                          });
-                        }}
-                        variant="outline"
-                        className="flex-1"
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handleCreateQuestion}
-                        className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                      >
-                        {editingQuestion ? "Update Question" : "Save Question"}
-                      </Button>
-                    </div>
-                  </div>
-                </Card>
-              )}
-
-              <Card className="p-6 bg-card/30 backdrop-blur-lg border-border">
-                {isLoadingQuestions ? (
-                  <div className="text-center py-8 text-muted-foreground">Loading questions...</div>
-                ) : questions.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">No questions found. Add your first question above.</div>
-                ) : (
-                  <Table>
-                    <TableHeader>
-                      <TableRow className="border-border hover:bg-muted/20">
-                        <TableHead className="text-foreground">Topic</TableHead>
-                        <TableHead className="text-foreground">Source</TableHead>
-                        <TableHead className="text-foreground">Question</TableHead>
-                        <TableHead className="text-foreground">Difficulty</TableHead>
-                        <TableHead className="text-foreground">Reference Links</TableHead>
-                        <TableHead className="text-foreground">Status</TableHead>
-                        <TableHead className="text-foreground">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {questions.map((q) => (
-                        <TableRow key={q.id} className="border-border hover:bg-muted/20">
-                          <TableCell className="text-foreground">{q.topic_name}</TableCell>
-                          <TableCell>
-                            <span
-                              className={`px-2 py-1 rounded text-xs ${q.source_type === "LINK"
-                                ? "bg-blue-500/20 text-blue-500"
-                                : "bg-purple-500/20 text-purple-500"
-                                }`}
-                            >
-                              {q.source_type === "LINK" ? "From Links" : "Manual"}
-                            </span>
-                          </TableCell>
-                          <TableCell className="text-foreground max-w-md">
-                            <div className="truncate" title={q.question_text || "No preview text"}>
-                              {q.question_text || (q.source_type === "LINK" ? "[From Links]" : "[No text]")}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <span
-                              className={`px-2 py-1 rounded text-xs ${q.difficulty === "HARD"
-                                ? "bg-destructive/20 text-destructive"
-                                : q.difficulty === "MEDIUM"
-                                  ? "bg-secondary/20 text-secondary"
-                                  : "bg-primary/20 text-primary"
-                                }`}
-                            >
-                              {q.difficulty}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            {q.reference_links_list && q.reference_links_list.length > 0 ? (
-                              <div className="flex flex-col gap-1">
-                                {q.reference_links_list.slice(0, 2).map((link, idx) => (
-                                  <a
-                                    key={idx}
-                                    href={link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-xs text-primary hover:underline flex items-center gap-1"
-                                  >
-                                    <ExternalLink className="h-3 w-3" />
-                                    {link.length > 40 ? `${link.substring(0, 40)}...` : link}
-                                  </a>
-                                ))}
-                                {q.reference_links_list.length > 2 && (
-                                  <span className="text-xs text-muted-foreground">
-                                    +{q.reference_links_list.length - 2} more
-                                  </span>
-                                )}
-                              </div>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">No links</span>
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            <span
-                              className={`px-2 py-1 rounded text-xs ${q.is_active
-                                ? "bg-green-500/20 text-green-500"
-                                : "bg-gray-500/20 text-gray-500"
-                                }`}
-                            >
-                              {q.is_active ? "Active" : "Inactive"}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex gap-2">
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="hover:bg-primary/10"
-                                onClick={() => {
-                                  setEditingQuestion(q);
-                                  setQuestionFormData({
-                                    source_type: q.source_type || "MANUAL",
-                                    topic: q.topic.toString(),
-                                    question_text: q.question_text || "",
-                                    ideal_answer: q.ideal_answer || "",
-                                    difficulty: q.difficulty,
-                                    reference_links: q.reference_links || "",
-                                    is_active: q.is_active,
-                                  });
-                                  setShowQuestionForm(true);
-                                }}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="hover:bg-destructive/10"
-                                onClick={() => handleDeleteQuestion(q.id)}
-                              >
-                                <Trash2 className="h-4 w-4 text-destructive" />
-                              </Button>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </Card>
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
             </div>
           </TabsContent>
         </Tabs>
       </div>
 
       {/* User Details Dialog */}
-<<<<<<< HEAD
       < Dialog open={showUserDetails} onOpenChange={setShowUserDetails} >
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-white backdrop-blur-xl border-border shadow-2xl">
           <DialogHeader>
@@ -2457,15 +1712,6 @@ const AdminDashboard = () => {
               User Details
             </DialogTitle>
             <DialogDescription className="text-muted-foreground">
-=======
-      <Dialog open={showUserDetails} onOpenChange={setShowUserDetails}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-card/95 backdrop-blur-lg border-primary/20">
-          <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-gradient-primary">
-              User Details
-            </DialogTitle>
-            <DialogDescription>
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
               View and manage user information and interview sessions
             </DialogDescription>
           </DialogHeader>
@@ -2502,7 +1748,6 @@ const AdminDashboard = () => {
                     </p>
                   </div>
                   <div>
-<<<<<<< HEAD
                     <label className="text-sm text-muted-foreground">Role</label>
                     <p className="text-foreground">
                       <span className={`px-2 py-1 rounded text-xs ${selectedUser.role === 'ADMIN' ? 'bg-purple-500/20 text-purple-500' : 'bg-blue-500/20 text-blue-500'}`}>
@@ -2533,20 +1778,6 @@ const AdminDashboard = () => {
                       </p>
                     </div>
                   )}
-=======
-                    <label className="text-sm text-muted-foreground">Access Type</label>
-                    <p className="text-foreground">
-                      <span
-                        className={`px-2 py-1 rounded text-xs ${selectedUser.access_type === 'FULL'
-                          ? "bg-primary/20 text-primary font-medium"
-                          : "bg-secondary/20 text-secondary"
-                          }`}
-                      >
-                        {selectedUser.access_type === 'FULL' ? 'Full Access' : 'Trial'}
-                      </span>
-                    </p>
-                  </div>
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                   {selectedUser.access_type === 'TRIAL' && (
                     <div>
                       <label className="text-sm text-muted-foreground">Trial Status</label>
@@ -2623,7 +1854,6 @@ const AdminDashboard = () => {
                         </>
                       )}
                     </Button>
-<<<<<<< HEAD
                     {selectedUser.role === 'USER' && (
                       <Button
                         variant="outline"
@@ -2633,15 +1863,6 @@ const AdminDashboard = () => {
                         {selectedUser.access_type === 'FULL' ? 'Set to Trial' : 'Set to Full Access'}
                       </Button>
                     )}
-=======
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleUpdateAccessType}
-                    >
-                      {selectedUser.access_type === 'FULL' ? 'Set to Trial' : 'Set to Full Access (Admin)'}
-                    </Button>
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
                     {!showPasswordChange && (
                       <Button
                         variant="outline"
@@ -2676,7 +1897,6 @@ const AdminDashboard = () => {
               </Card>
 
               {/* Interview Sessions */}
-<<<<<<< HEAD
               {/* Interview Sessions - Only for Students */}
               {selectedUser.role === 'USER' && (
                 <Card className="p-4 bg-card/50 border-border">
@@ -2859,95 +2079,6 @@ const AdminDashboard = () => {
         </DialogContent>
       </Dialog >
     </div >
-=======
-              <Card className="p-4 bg-card/50 border-border">
-                <h3 className="text-lg font-semibold text-foreground mb-4">
-                  Interview Sessions ({userSessions.length})
-                </h3>
-
-                {isLoadingSessions ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    Loading sessions...
-                  </div>
-                ) : userSessions.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    No interview sessions found for this user.
-                  </div>
-                ) : (
-                  <div className="space-y-3">
-                    {userSessions.map((session) => (
-                      <div
-                        key={session.id}
-                        className="p-3 bg-muted/20 rounded-lg border border-border"
-                      >
-                        <div className="flex justify-between items-start mb-2">
-                          <div>
-                            <p className="font-medium text-foreground">
-                              Session #{session.id}
-                            </p>
-                            <p className="text-sm text-muted-foreground">
-                              {new Date(session.started_at).toLocaleString()}
-                            </p>
-                          </div>
-                          <span
-                            className={`px-2 py-1 rounded text-xs ${session.status === 'COMPLETED'
-                              ? "bg-primary/20 text-primary"
-                              : session.status === 'IN_PROGRESS'
-                                ? "bg-secondary/20 text-secondary"
-                                : "bg-muted text-muted-foreground"
-                              }`}
-                          >
-                            {session.status}
-                          </span>
-                        </div>
-
-                        {session.topics_list && session.topics_list.length > 0 && (
-                          <div className="mb-2">
-                            <p className="text-xs text-muted-foreground mb-1">Topics:</p>
-                            <div className="flex flex-wrap gap-1">
-                              {session.topics_list.map((topic: any) => (
-                                <span
-                                  key={topic.id}
-                                  className="px-2 py-0.5 rounded text-xs bg-primary/10 text-primary"
-                                >
-                                  {topic.name}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {session.status === 'COMPLETED' && (
-                          <div className="grid grid-cols-2 gap-2 mt-2">
-                            <div>
-                              <p className="text-xs text-muted-foreground">Communication Score</p>
-                              <p className="text-foreground font-medium">
-                                {session.communication_score !== null
-                                  ? `${(session.communication_score * 100).toFixed(1)}%`
-                                  : "N/A"}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-xs text-muted-foreground">Technology Score</p>
-                              <p className="text-foreground font-medium">
-                                {session.technology_score !== null
-                                  ? `${(session.technology_score * 100).toFixed(1)}%`
-                                  : "N/A"}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </Card>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
   );
 };
 

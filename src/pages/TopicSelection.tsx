@@ -288,8 +288,8 @@ const TopicSelection = () => {
                 Resume
               </Button>
             </div>
-          </Card>
-        </div>
+          </Card >
+        </div >
       )}
 
       <div className="max-w-6xl w-full relative z-10">
@@ -308,101 +308,96 @@ const TopicSelection = () => {
           </div>
         </div>
 
-        {isLoading ? (
-          <div className="text-center py-20">
-            <div className="w-12 h-12 border-4 border-gray-200 border-t-ohg-orange rounded-full animate-spin mx-auto mb-4"></div>
-            <p className="text-muted-foreground animate-pulse font-medium">Loading courses...</p>
-          </div>
-        ) : !Array.isArray(topics) || topics.length === 0 ? (
-          <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
-            <p className="text-muted-foreground mb-4 text-lg">No courses available.</p>
-            <p className="text-sm text-gray-400 mb-6">
-              Please ensure the backend is running and data is seeded.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 px-4">
-            {topics.map((topic, index) => {
-              const topicNameLower = topic.name.toLowerCase();
-              const Icon = topicIcons[topicNameLower] || topicIcons.default;
-              const isSelected = selectedTopics.includes(topic.id);
+        {
+          isLoading ? (
+            <div className="text-center py-20">
+              <div className="w-12 h-12 border-4 border-gray-200 border-t-ohg-orange rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-muted-foreground animate-pulse font-medium">Loading courses...</p>
+            </div >
+          ) : !Array.isArray(topics) || topics.length === 0 ? (
+            <div className="text-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+              <p className="text-muted-foreground mb-4 text-lg">No courses available.</p>
+              <p className="text-sm text-gray-400 mb-6">
+                Please ensure the backend is running and data is seeded.
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 px-4">
+              {topics.map((topic, index) => {
+                const topicNameLower = topic.name.toLowerCase();
+                const Icon = topicIcons[topicNameLower] || topicIcons.default;
+                const isSelected = selectedTopics.includes(topic.id);
 
-                  className={`
+                return (
+                  <button
+                    key={topic.id}
+                    onClick={() => toggleTopic(topic.id)}
+                    className={`
                     group relative p-6 rounded-2xl border transition-all duration-300 text-left
                     flex items-start gap-4 hover:shadow-xl hover:-translate-y-1
                     ${isSelected
-                      ? "bg-ohg-navy border-ohg-navy shadow-lg shadow-ohg-navy/20"
-                      : "bg-white border-gray-100 hover:border-ohg-teal/30 hover:bg-white"
-                    }
-                  `}
-                  style={{ animationDelay: `${index * 0.05}s` }}
-                >
-                  <div
-                    className={`
-                    p-3 rounded-xl transition-all duration-300 shrink-0
-                    ${isSelected
-                    p-3 rounded-xl transition-all duration-300 shrink-0
-                    ${isSelected
-                        ? "bg-white/10 text-white"
-                        : "bg-ohg-teal/10 text-ohg-teal group-hover:bg-ohg-teal group-hover:text-white"
+                        ? "bg-ohg-navy border-ohg-navy shadow-lg shadow-ohg-navy/20"
+                        : "bg-white border-gray-100 hover:border-ohg-teal/30 hover:bg-white"
                       }
                   `}
+                    style={{ animationDelay: `${index * 0.05}s` }}
                   >
-                    <Icon className="h-6 w-6" />
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <div className="flex justify-between items-start">
-                      <h3
-                        className={`text-lg font-bold truncate pr-2 transition-colors ${isSelected ? "text-white" : "text-ohg-navy group-hover:text-ohg-navy"
-                          }`}
-                      >
-                        {topic.name}
-                      </h3>
-                      {isSelected && (
-                        <div className="w-5 h-5 rounded-full bg-ohg-orange flex items-center justify-center shrink-0 animate-scale-in shadow-sm">
-                          <span className="text-white text-[10px] font-bold">✓</span>
-                        </div>
-                      )}
+                    <div
+                      className={`
+                    p-3 rounded-xl transition-all duration-300 shrink-0
+                    ${isSelected
+                          ? "bg-white/10 text-white"
+                          : "bg-ohg-teal/10 text-ohg-teal group-hover:bg-ohg-teal group-hover:text-white"
+                        }
+                  `}
+                    >
+                      <Icon className="h-6 w-6" />
                     </div>
 
-                    {topic.question_count > 0 && (
-                      <p className={`text-xs mt-1 font-medium ${isSelected ? "text-white/70" : "text-muted-foreground"}`}>
-                        {topic.question_count} question{topic.question_count !== 1 ? 's' : ''}
-                      </p>
-                    )}
-                  </div>
-                </button>
-      );
-            })}
-    </div>
-  )
-}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start">
+                        <h3
+                          className={`text-lg font-bold truncate pr-2 transition-colors ${isSelected ? "text-white" : "text-ohg-navy group-hover:text-ohg-navy"
+                            }`}
+                        >
+                          {topic.name}
+                        </h3>
+                        {isSelected && (
+                          <div className="w-5 h-5 rounded-full bg-ohg-orange flex items-center justify-center shrink-0 animate-scale-in shadow-sm">
+                            <span className="text-white text-[10px] font-bold">✓</span>
+                          </div>
+                        )}
+                      </div>
 
-<div className="flex justify-center pb-12">
-  <Button
-    onClick={handleStart}
-    disabled={selectedTopics.length === 0}
-    className={`
-<<<<<<< HEAD
+                      {topic.question_count > 0 && (
+                        <p className={`text-xs mt-1 font-medium ${isSelected ? "text-white/70" : "text-muted-foreground"}`}>
+                          {topic.question_count} question{topic.question_count !== 1 ? 's' : ''}
+                        </p>
+                      )}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+        <div className="flex justify-center pb-12">
+          <Button
+            onClick={handleStart}
+            disabled={selectedTopics.length === 0}
+            className={`
               px-16 py-8 text-xl rounded-full font-bold transition-all duration-300
               ${selectedTopics.length === 0
-        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-        : "bg-ohg-orange text-white hover:bg-ohg-orange-hover shadow-xl hover:shadow-ohg-orange/30 hover:scale-105"
-=======
-              px-16 py-8 text-xl rounded-full font-semibold transition-all duration-300
-              ${selectedTopics.length === 0
-                ? "bg-slate-800 text-slate-500 cursor-not-allowed"
-                : "bg-white text-slate-950 hover:bg-slate-200 shadow-[0_0_20px_-5px_rgba(255,255,255,0.3)] hover:scale-105"
->>>>>>> 7319702edcefb52fb24d75d05142ff3ef6bb30ad
-      }
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-ohg-orange text-white hover:bg-ohg-orange-hover shadow-xl hover:shadow-ohg-orange/30 hover:scale-105"
+              }
             `}
-  >
-    Start Interview
-  </Button>
-</div>
-      </div >
-    </div >
+          >
+            Start Interview
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
