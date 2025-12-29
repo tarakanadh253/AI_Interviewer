@@ -179,6 +179,7 @@ class ApiService {
     is_active?: boolean;
     role?: 'ADMIN' | 'USER';
     access_type?: 'TRIAL' | 'FULL' | null;
+    enrolled_course?: number | undefined;
   }): Promise<UserProfile> {
     return this.request<UserProfile>('/users/', {
       method: 'POST',
@@ -548,6 +549,7 @@ class ApiService {
     email?: string;
     name?: string;
     password?: string;
+    enrolled_course?: number | null;
   }): Promise<UserProfile> {
     return this.request<UserProfile>(`/admin/users/${id}/`, {
       method: 'PATCH',

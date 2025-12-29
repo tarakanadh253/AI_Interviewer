@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,11 @@ const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    // Wake up the backend when the login page loads to mitigate cold starts
+    apiService.wakeUp();
+  }, []);
 
   const handleAuth = async () => {
     if (!email || !password) {
@@ -51,6 +56,7 @@ const Login = () => {
           title: "Check your email",
           description: "We sent you a confirmation link. Please click it to verify your account.",
         });
+        setIsLoading(false);
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
@@ -67,27 +73,37 @@ const Login = () => {
           }));
           localStorage.setItem('username', data.user.email || '');
 
-          try {
-            if (data.user.email) {
-              await apiService.createUser({
-                username: data.user.email,
-                email: data.user.email,
-                password: password,
-                role: 'USER',
-                access_type: 'TRIAL',
-              });
-            }
-          } catch (err: any) {
-            const errorMsg = err.message || JSON.stringify(err);
-            if (!errorMsg.toLowerCase().includes('already exists') && !errorMsg.toLowerCase().includes('unique')) {
-              console.warn('Failed to sync user with backend:', err);
-            }
+          // Non-blocking user sync (Fire and forget)
+          // We don't await this so the user gets instant feedback
+          if (data.user.email) {
+            apiService.createUser({
+              username: data.user.email,
+              email: data.user.email,
+              password: password,
+              role: 'USER',
+              access_type: 'TRIAL',
+            }).catch(err => {
+              // Ignore unique constraint errors
+              const errorMessage = err.message || JSON.stringify(err);
+              if (errorMessage.includes('already exists') || errorMessage.includes('unique constraint')) {
+                // This is expected during login of existing user
+                return;
+              }
+              console.warn('Background sync failed:', err);
+            });
           }
+
+          toast({
+            title: "Success",
+            description: "Signed in successfully!",
+            variant: "default",
+          });
 
           navigate("/topic-selection");
         }
       }
     } catch (error: any) {
+      setIsLoading(false);
       console.error('Auth error:', error);
       const errorMessage = error.message || "An error occurred during authentication.";
       const isCredentialError = errorMessage.toLowerCase().includes("invalid login credentials");
@@ -97,8 +113,6 @@ const Login = () => {
         description: isCredentialError ? "The email or password you entered is incorrect. Please try again." : errorMessage,
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 

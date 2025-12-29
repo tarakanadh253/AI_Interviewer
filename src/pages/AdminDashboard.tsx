@@ -138,6 +138,9 @@ const AdminDashboard = () => {
     level: "BEGINNER" as "BEGINNER" | "INTERMEDIATE" | "ADVANCED",
   });
 
+  // Edit User State
+  const [editingUser, setEditingUser] = useState<UserProfile | null>(null);
+
   // Default view mode to grid for topics
   useEffect(() => {
     setViewMode("grid");
@@ -440,6 +443,67 @@ const AdminDashboard = () => {
       toast({
         title: "Error",
         description: error.message || "Failed to create user. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsCreatingUser(false);
+    }
+  };
+
+  const handleUpdateUser = async () => {
+    if (!editingUser || !userFormData.username || !userFormData.email) {
+      toast({
+        title: "Missing Fields",
+        description: "Please fill in username and email.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsCreatingUser(true);
+    try {
+      await apiService.updateAdminUser(editingUser.id, {
+        email: userFormData.email,
+        name: userFormData.name || undefined,
+        is_active: userFormData.is_active,
+        access_type: userFormData.role === 'USER' ? userFormData.access_type : undefined, // Role update might not be supported easily without more complex logic, stick to basic fields + access
+        enrolled_course: (userFormData.role === 'USER' && userFormData.enrolled_course && userFormData.enrolled_course !== "no_course") ? parseInt(userFormData.enrolled_course) : (userFormData.role === 'USER' && userFormData.enrolled_course === "no_course") ? null : undefined,
+        // Password update handled separately usually, but if provided here we can try
+        password: userFormData.password ? userFormData.password : undefined,
+      });
+
+      toast({
+        title: "Success",
+        description: "User updated successfully",
+      });
+
+      // Reset form
+      setUserFormData({
+        username: "",
+        password: "",
+        email: "",
+        name: "",
+        is_active: true,
+        role: 'USER',
+        access_type: 'TRIAL',
+        enrolled_course: "no_course",
+      });
+      setShowUserForm(false);
+      setEditingUser(null);
+      fetchUsers();
+
+      // If we updated the currently viewed user, refresh details
+      if (selectedUser && selectedUser.id === editingUser.id) {
+        // Re-fetch users or just update local selectedUser (fetching is safer)
+        const updatedUser = await apiService.getUsers().then(users => users.find(u => u.id === editingUser.id));
+        if (updatedUser) setSelectedUser(updatedUser);
+      }
+
+    } catch (error: any) {
+      console.error('Error updating user:', error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to update user.",
         variant: "destructive",
       });
     } finally {
@@ -834,7 +898,7 @@ const AdminDashboard = () => {
               {showUserForm && (
                 <Card className="p-4 md:p-6 bg-white/80 backdrop-blur-lg border-border shadow-soft animate-slide-up">
                   <h3 className="text-lg font-semibold text-foreground mb-4">
-                    Create New User
+                    {editingUser ? "Edit User" : "Create New User"}
                   </h3>
                   <div className="space-y-4">
                     <div>
@@ -846,11 +910,12 @@ const AdminDashboard = () => {
                         value={userFormData.username}
                         onChange={(e) => setUserFormData({ ...userFormData, username: e.target.value })}
                         className="bg-input border-border"
+                        disabled={!!editingUser} // Username usually shouldn't be changed easily due to ID links
                       />
                     </div>
                     <div>
                       <label className="text-sm text-foreground mb-2 block">
-                        Password <span className="text-destructive">*</span>
+                        Password {editingUser ? "(Leave blank to keep current)" : <span className="text-destructive">*</span>}
                       </label>
                       <div className="relative">
                         <Input
@@ -905,6 +970,7 @@ const AdminDashboard = () => {
                         onValueChange={(value: 'ADMIN' | 'USER') =>
                           setUserFormData({ ...userFormData, role: value })
                         }
+                        disabled={!!editingUser} // Role change might require more care, disable for now or allow if backend handles it
                       >
                         <SelectTrigger className="bg-input border-border text-foreground">
                           <SelectValue placeholder="Select role" />
@@ -997,6 +1063,7 @@ const AdminDashboard = () => {
                             access_type: 'TRIAL',
                             enrolled_course: "no_course",
                           });
+                          setEditingUser(null);
                         }}
                         variant="outline"
                         className="flex-1"
@@ -1005,11 +1072,11 @@ const AdminDashboard = () => {
                         Cancel
                       </Button>
                       <Button
-                        onClick={handleCreateUser}
+                        onClick={editingUser ? handleUpdateUser : handleCreateUser}
                         className="flex-1 bg-ohg-navy hover:bg-ohg-navy/90 text-white"
                         disabled={isCreatingUser}
                       >
-                        {isCreatingUser ? "Creating..." : "Create User"}
+                        {isCreatingUser ? (editingUser ? "Updating..." : "Creating...") : (editingUser ? "Update User" : "Create User")}
                       </Button>
                     </div>
                   </div>
@@ -1735,6 +1802,11 @@ const AdminDashboard = () => {
                     <label className="text-sm text-muted-foreground">Username</label>
                     <p className="text-foreground font-medium">{selectedUser.username}</p>
                   </div>
+
+                  <div>
+                    <label className="text-sm text-muted-foreground">Student ID</label>
+                    <p className="text-foreground font-mono">{selectedUser.student_id || "-"}</p>
+                  </div>
                   <div>
                     <label className="text-sm text-muted-foreground">Email</label>
                     <p className="text-foreground">{selectedUser.email}</p>
@@ -1784,6 +1856,16 @@ const AdminDashboard = () => {
                         >
                           {selectedUser.access_type === 'FULL' ? 'Full Access' : 'Trial'}
                         </span>
+                      </p>
+                    </div>
+                  )}
+                  {selectedUser.role === 'USER' && (
+                    <div>
+                      <label className="text-sm text-muted-foreground">Enrolled Course</label>
+                      <p className="text-foreground">
+                        {selectedUser.enrolled_course
+                          ? (topics.find(t => t.id === selectedUser.enrolled_course)?.name || `ID: ${selectedUser.enrolled_course}`)
+                          : "-"}
                       </p>
                     </div>
                   )}
@@ -1846,6 +1928,27 @@ const AdminDashboard = () => {
                   ) : null}
 
                   <div className="flex flex-wrap gap-2">
+                    <Button
+                      onClick={() => {
+                        setEditingUser(selectedUser);
+                        setUserFormData({
+                          username: selectedUser.username,
+                          password: "", // Don't fill password
+                          email: selectedUser.email,
+                          name: selectedUser.name || "",
+                          is_active: selectedUser.is_active,
+                          role: selectedUser.role,
+                          access_type: selectedUser.access_type || 'TRIAL',
+                          enrolled_course: selectedUser.enrolled_course ? selectedUser.enrolled_course.toString() : "no_course",
+                        });
+                        setShowUserForm(true);
+                        setShowUserDetails(false);
+                      }}
+                      className="bg-ohg-navy text-white hover:bg-ohg-navy/90"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit User
+                    </Button>
                     <Button
                       variant="outline"
                       size="sm"
