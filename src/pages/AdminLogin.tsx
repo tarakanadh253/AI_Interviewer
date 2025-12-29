@@ -149,7 +149,7 @@ const AdminLogin = () => {
 
                     <Button
                         onClick={handleLogin}
-                        disabled={isLoading || !username || !password}
+                        disabled={isLoading}
                         className="w-full h-12 text-base font-bold bg-ohg-navy hover:bg-ohg-navy/90 text-white transition-all duration-300 shadow-lg disabled:opacity-50 shadow-ohg-navy/30"
                     >
                         {isLoading ? (
@@ -158,7 +158,7 @@ const AdminLogin = () => {
                                 <span>Verifying Access...</span>
                             </div>
                         ) : (
-                            <><Lock className="mr-2 h-4 w-4" /> Access Dashboard</>
+                            <><Lock className="mr-2 h-4 w-4" /> Login</>
                         )}
                     </Button>
 
