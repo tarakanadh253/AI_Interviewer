@@ -178,13 +178,13 @@ const RoundDisplay = () => {
                                     </div>
 
                                     {/* Center Node */}
-                                    <div className="relative flex-shrink-0 hidden md:flex items-center justify-center w-12 h-12 rounded-full border-4 border-white shadow-xl z-20 
-                                ${isCompleted ? 'bg-emerald-500' : isUnlocked ? 'bg-ohg-orange' : 'bg-gray-300'}
-                             ">
+                                    <div className={`relative flex-shrink-0 hidden md:flex items-center justify-center w-12 h-12 rounded-full border-4 border-white shadow-xl z-20 
+                                ${isCompleted ? 'bg-emerald-500' : isUnlocked ? 'bg-ohg-orange' : 'bg-gray-200'}
+                             `}>
                                         {isCompleted ? (
                                             <Trophy className="h-5 w-5 text-white" />
                                         ) : (
-                                            <span className="text-white font-bold">{index + 1}</span>
+                                            <span className={`font-bold ${isUnlocked ? 'text-white' : 'text-gray-500'}`}>{index + 1}</span>
                                         )}
                                     </div>
 

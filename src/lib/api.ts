@@ -45,7 +45,6 @@ interface Question {
   source_type_display?: string;
   question_text: string;
   ideal_answer: string;
-  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
   is_active: boolean;
   reference_links?: string | null;
   reference_links_list?: string[];
@@ -150,6 +149,15 @@ class ApiService {
     return response.json();
   }
 
+  async wakeUp(): Promise<void> {
+    try {
+      // Simple lightweight call to wake up the server (e.g. Render cold start)
+      await fetch(`${API_URL}/topics/?limit=1`, { method: 'HEAD' });
+    } catch (e) {
+      console.log('Wake up ping failed', e);
+    }
+  }
+
   // User endpoints
   async login(username: string, password: string): Promise<UserProfile> {
     return this.request<UserProfile>('/users/login/', {
@@ -225,11 +233,10 @@ class ApiService {
   }
 
   // Question endpoints
-  async getQuestions(topicId?: number, difficulty?: string, roundId?: number): Promise<Question[]> {
+  async getQuestions(topicId?: number, roundId?: number): Promise<Question[]> {
     try {
       const params = new URLSearchParams();
       if (topicId) params.append('topic_id', topicId.toString());
-      if (difficulty) params.append('difficulty', difficulty);
       if (roundId) params.append('round_id', roundId.toString());
 
       const query = params.toString();
@@ -340,7 +347,6 @@ class ApiService {
     source_type?: 'MANUAL' | 'LINK';
     question_text?: string;
     ideal_answer?: string;
-    difficulty: 'EASY' | 'MEDIUM' | 'HARD';
     is_active?: boolean;
     reference_links?: string;
   }): Promise<Question> {

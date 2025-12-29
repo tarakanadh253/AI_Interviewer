@@ -64,7 +64,20 @@ const Interview = () => {
         }
 
         // Get session
-        const sessionData = await apiService.getSession(parseInt(sessionId));
+        const parsedId = parseInt(sessionId);
+        if (isNaN(parsedId)) {
+          console.error("Invalid session ID found in storage:", sessionId);
+          localStorage.removeItem('session_id'); // Clear invalid ID
+          toast({
+            title: "Error",
+            description: "Invalid session. Please start over.",
+            variant: "destructive",
+          });
+          navigate("/topic-selection");
+          return;
+        }
+
+        const sessionData = await apiService.getSession(parsedId);
 
         // Check if session is expired or cancelled
         if (sessionData.status === 'CANCELLED') {
@@ -102,7 +115,7 @@ const Interview = () => {
         }
 
         for (const topicId of topicIds) {
-          const topicQuestions = await apiService.getQuestions(topicId, undefined, roundId || undefined);
+          const topicQuestions = await apiService.getQuestions(topicId, roundId || undefined);
           // Ensure topicQuestions is an array before spreading
           if (Array.isArray(topicQuestions)) {
             allQuestions.push(...topicQuestions);

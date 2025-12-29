@@ -107,7 +107,6 @@ const AdminDashboard = () => {
     round: "",
     question_text: "",
     ideal_answer: "",
-    difficulty: "MEDIUM" as "EASY" | "MEDIUM" | "HARD",
     reference_links: "",
     is_active: true,
   });
@@ -675,7 +674,6 @@ const AdminDashboard = () => {
           source_type: questionFormData.source_type,
           question_text: questionFormData.source_type === "MANUAL" ? questionFormData.question_text : undefined,
           ideal_answer: questionFormData.source_type === "MANUAL" ? questionFormData.ideal_answer : undefined,
-          difficulty: questionFormData.difficulty,
           is_active: questionFormData.is_active,
           reference_links: questionFormData.source_type === "LINK" ? questionFormData.reference_links : (questionFormData.reference_links || undefined),
           round: selectedRound.id,
@@ -691,7 +689,6 @@ const AdminDashboard = () => {
           source_type: questionFormData.source_type,
           question_text: questionFormData.source_type === "MANUAL" ? questionFormData.question_text : undefined,
           ideal_answer: questionFormData.source_type === "MANUAL" ? questionFormData.ideal_answer : undefined,
-          difficulty: questionFormData.difficulty,
           is_active: questionFormData.is_active,
           reference_links: questionFormData.source_type === "LINK" ? questionFormData.reference_links : (questionFormData.reference_links || undefined),
         });
@@ -709,7 +706,6 @@ const AdminDashboard = () => {
         round: "",
         question_text: "",
         ideal_answer: "",
-        difficulty: "MEDIUM",
         reference_links: "",
         is_active: true,
       });
@@ -1573,23 +1569,8 @@ const AdminDashboard = () => {
                               </div>
                             )}
 
-                            {/* Hidden Difficulty and Active Checkbox - Defaults used */}
+                            {/* Hidden Active Checkbox - Defaults used */}
                             <div className="hidden">
-                              <Select
-                                value={questionFormData.difficulty}
-                                onValueChange={(value: "EASY" | "MEDIUM" | "HARD") =>
-                                  setQuestionFormData({ ...questionFormData, difficulty: value, round: selectedRound.id.toString() })
-                                }
-                              >
-                                <SelectTrigger className="bg-input border-border text-foreground">
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="EASY">Easy</SelectItem>
-                                  <SelectItem value="MEDIUM">Medium</SelectItem>
-                                  <SelectItem value="HARD">Hard</SelectItem>
-                                </SelectContent>
-                              </Select>
                               <input
                                 type="checkbox"
                                 id="qs_active"
@@ -1630,7 +1611,6 @@ const AdminDashboard = () => {
                             <TableHeader>
                               <TableRow className="border-border hover:bg-muted/20">
                                 <TableHead className="w-[40%] text-foreground">Question</TableHead>
-                                <TableHead className="text-foreground">Difficulty</TableHead>
                                 <TableHead className="text-foreground">Type</TableHead>
                                 <TableHead className="text-foreground">Status</TableHead>
                                 <TableHead className="text-right text-foreground">Actions</TableHead>
@@ -1642,14 +1622,6 @@ const AdminDashboard = () => {
                                   <TableRow key={q.id} className="border-border hover:bg-muted/20">
                                     <TableCell className="font-medium max-w-md truncate text-foreground" title={q.question_text}>
                                       {q.question_text || "Link based content"}
-                                    </TableCell>
-                                    <TableCell>
-                                      <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${q.difficulty === 'EASY' ? 'bg-green-100 text-green-700 border-green-200' :
-                                        q.difficulty === 'MEDIUM' ? 'bg-amber-100 text-amber-700 border-amber-200' :
-                                          'bg-red-100 text-red-700 border-red-200'
-                                        }`}>
-                                        {q.difficulty}
-                                      </span>
                                     </TableCell>
                                     <TableCell className="text-xs text-muted-foreground">{q.source_type}</TableCell>
                                     <TableCell>
@@ -1670,7 +1642,6 @@ const AdminDashboard = () => {
                                               round: q.round?.toString() || selectedRound.id.toString(),
                                               question_text: q.question_text,
                                               ideal_answer: q.ideal_answer,
-                                              difficulty: q.difficulty,
                                               reference_links: q.reference_links || "",
                                               is_active: q.is_active,
                                             });
