@@ -92,6 +92,7 @@ const Interview = () => {
 
         // Get questions for selected topics
         const topicIds = sessionData.topics;
+        const roundId = sessionData.round;
         const allQuestions: Question[] = [];
 
         // Ensure topicIds is an array
@@ -101,7 +102,7 @@ const Interview = () => {
         }
 
         for (const topicId of topicIds) {
-          const topicQuestions = await apiService.getQuestions(topicId);
+          const topicQuestions = await apiService.getQuestions(topicId, undefined, roundId || undefined);
           // Ensure topicQuestions is an array before spreading
           if (Array.isArray(topicQuestions)) {
             allQuestions.push(...topicQuestions);

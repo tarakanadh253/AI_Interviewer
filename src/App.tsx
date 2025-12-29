@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import TopicSelection from "./pages/TopicSelection";
+import LevelSelection from "./pages/LevelSelection";
+import RoundDisplay from "./pages/RoundDisplay";
 import Interview from "./pages/Interview";
 import Results from "./pages/Results";
 import AdminDashboard from "./pages/AdminDashboard";
@@ -24,6 +26,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/login" element={<Login />} />
           <Route path="/topic-selection" element={<TopicSelection />} />
+          <Route path="/level-selection" element={<LevelSelection />} />
+          <Route path="/rounds" element={<RoundDisplay />} />
           <Route path="/interview" element={<Interview />} />
           <Route path="/results" element={<Results />} />
           <Route path="/admin" element={<AdminLogin />} />

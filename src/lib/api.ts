@@ -62,6 +62,7 @@ interface InterviewSession {
   ended_at: string | null;
   duration_seconds: number | null;
   topics: number[];
+  round?: number | null;
   topics_list: Array<{ id: number; name: string; question_count?: number }>;
   status: 'CREATED' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
   communication_score: number | null;
@@ -199,9 +200,14 @@ class ApiService {
   }
 
   // Course endpoints
-  async getCourses(): Promise<Course[]> {
+  // Course endpoints
+  async getCourses(username?: string): Promise<Course[]> {
     try {
-      const result = await this.request<any>('/topics/');
+      let url = '/topics/';
+      if (username) {
+        url += `?username=${encodeURIComponent(username)}`;
+      }
+      const result = await this.request<any>(url);
       // Handle both direct array and paginated response
       if (Array.isArray(result)) {
         return result;
@@ -219,11 +225,12 @@ class ApiService {
   }
 
   // Question endpoints
-  async getQuestions(topicId?: number, difficulty?: string): Promise<Question[]> {
+  async getQuestions(topicId?: number, difficulty?: string, roundId?: number): Promise<Question[]> {
     try {
       const params = new URLSearchParams();
       if (topicId) params.append('topic_id', topicId.toString());
       if (difficulty) params.append('difficulty', difficulty);
+      if (roundId) params.append('round_id', roundId.toString());
 
       const query = params.toString();
       const result = await this.request<any>(`/questions/${query ? `?${query}` : ''}`);
@@ -245,12 +252,13 @@ class ApiService {
   }
 
   // Session endpoints
-  async createSession(username: string, topicIds: number[]): Promise<InterviewSession> {
+  async createSession(username: string, topicIds: number[], roundId?: number): Promise<InterviewSession> {
     return this.request<InterviewSession>('/sessions/', {
       method: 'POST',
       body: JSON.stringify({
         username,
         topic_ids: topicIds,
+        round_id: roundId,
       }),
     });
   }
@@ -454,6 +462,28 @@ class ApiService {
       return [];
     } catch (error) {
       console.error('Error fetching admin rounds:', error);
+      return [];
+    }
+  }
+
+  // Public Round endpoints
+  async getRounds(topicId?: number, level?: string): Promise<Round[]> {
+    try {
+      const params = new URLSearchParams();
+      if (topicId) params.append('topic_id', topicId.toString());
+      if (level) params.append('level', level);
+
+      const query = params.toString();
+      const result = await this.request<any>(`/rounds/${query ? `?${query}` : ''}`);
+
+      if (Array.isArray(result)) {
+        return result;
+      } else if (result && Array.isArray(result.results)) {
+        return result.results;
+      }
+      return [];
+    } catch (error) {
+      console.error('Error fetching rounds:', error);
       return [];
     }
   }

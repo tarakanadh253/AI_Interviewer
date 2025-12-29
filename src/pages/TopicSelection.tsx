@@ -28,14 +28,15 @@ const TopicSelection = () => {
   useEffect(() => {
     const fetchTopics = async () => {
       try {
-        const fetchedTopics = await apiService.getCourses();
+        const username = localStorage.getItem('username');
+        const fetchedTopics = await apiService.getCourses(username || undefined);
         // Ensure we always have an array
         if (Array.isArray(fetchedTopics)) {
           setTopics(fetchedTopics);
           if (fetchedTopics.length === 0) {
             toast({
               title: "No Courses Available",
-              description: "Courses are not seeded in the database. Please run: python manage.py seed_data",
+              description: "No courses found. If you are a student, you may not be enrolled in any course yet.",
               variant: "destructive",
             });
           }
@@ -103,9 +104,22 @@ const TopicSelection = () => {
   }, [toast]);
 
   const toggleTopic = (id: number) => {
-    setSelectedTopics((prev) =>
-      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id]
-    );
+    // Single selection only
+    setSelectedTopics([id]);
+  };
+
+  const handleNext = () => {
+    if (selectedTopics.length === 0) {
+      toast({
+        title: "No Course Selected",
+        description: "Please select a course to continue.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const courseId = selectedTopics[0];
+    navigate("/level-selection", { state: { courseId } });
   };
 
   const handleResume = () => {
@@ -116,114 +130,7 @@ const TopicSelection = () => {
     }
   };
 
-  const handleStartNew = async () => {
-    if (selectedTopics.length === 0) {
-      toast({
-        title: "No Courses Selected",
-        description: "Please select at least one course to continue.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    const username = localStorage.getItem('username');
-    if (!username) {
-      toast({
-        title: "Not Signed In",
-        description: "Please sign in first.",
-        variant: "destructive",
-      });
-      navigate("/login");
-      return;
-    }
-
-    setIsLoading(true);
-
-    const createSessionWithRetry = async (retryCount = 0) => {
-      try {
-        // Create interview session
-        const session = await apiService.createSession(username, selectedTopics);
-
-        // Clear exam proctoring state from previous sessions
-        localStorage.removeItem('exam_is_banned');
-        localStorage.removeItem('exam_tab_switch_count');
-
-        localStorage.setItem('session_id', session.id.toString());
-        setShowResumeDialog(false);
-        navigate("/interview");
-      } catch (error: any) {
-        console.error('Error creating session:', error);
-        const errorMsg = error.message?.toLowerCase() || "";
-
-        // Handle Active Session Error - Auto Cancel and Retry
-        if ((errorMsg.includes('active session') || errorMsg.includes('complete it first')) && retryCount < 1) {
-          console.log("Active session found, cancelling and retrying...");
-          try {
-            await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8000/api'}/sessions/cancel-active/`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ username }),
-            });
-            // Retry creation once
-            await createSessionWithRetry(retryCount + 1);
-            return;
-          } catch (cancelError) {
-            console.error("Failed to cancel active session:", cancelError);
-          }
-        }
-
-        // Handle User Not Found - Auto Repair
-        if (errorMsg.includes('user not found') && retryCount < 1) {
-          try {
-            console.log('Attempting to create missing user...');
-            const userStr = localStorage.getItem('user');
-            if (userStr) {
-              const userObj = JSON.parse(userStr);
-              if (userObj.email) {
-                await apiService.createUser({
-                  username: userObj.email,
-                  email: userObj.email,
-                  password: "synced_password_placeholder",
-                  role: 'USER',
-                  access_type: 'TRIAL'
-                });
-                await createSessionWithRetry(retryCount + 1);
-                return;
-              }
-            }
-          } catch (retryError) {
-            console.error('Critical: Failed to auto-create user on retry:', retryError);
-          }
-        }
-
-        // Final Error Handling
-        setIsLoading(false);
-        let errorTitle = "Unable to Start Interview";
-        let errorDescription = "Could not start interview. Please try again.";
-
-        if (errorMsg.includes('trial') || errorMsg.includes('already used')) {
-          errorTitle = "Trial Interview Already Used";
-          errorDescription = "You've already completed your free trial interview.";
-        } else if (errorMsg.includes('inactive') || errorMsg.includes('account')) {
-          errorTitle = "Account Inactive";
-          errorDescription = "Your account is inactive. Please contact the administrator.";
-        } else {
-          errorDescription = error.message;
-        }
-
-        toast({
-          title: errorTitle,
-          description: errorDescription,
-          variant: "destructive",
-        });
-      }
-    };
-
-    await createSessionWithRetry();
-  };
-
-  const handleStart = handleStartNew;
-
+  // Calculate remaining time helper...
   const calculateRemainingTime = (startedAt: string) => {
     const start = new Date(startedAt);
     const now = new Date();
@@ -295,17 +202,11 @@ const TopicSelection = () => {
       <div className="max-w-6xl w-full relative z-10">
         <div className="text-center mb-16 animate-fade-in">
           <h1 className="text-4xl md:text-5xl font-bold text-ohg-navy mb-6 tracking-tight">
-            Choose Your Courses
+            Choose Your Course
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium">
-            Select up to 5 courses to customize your technical interview.
+            Select a course to proceed to level selection.
           </p>
-          <div className="mt-8">
-            <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-300 ${selectedTopics.length > 0 ? "bg-ohg-orange/10 text-ohg-orange border border-ohg-orange/20" : "bg-gray-100 text-muted-foreground border border-gray-200"
-              }`}>
-              {selectedTopics.length} / 5 courses selected
-            </span>
-          </div>
         </div>
 
         {
@@ -383,7 +284,7 @@ const TopicSelection = () => {
 
         <div className="flex justify-center pb-12">
           <Button
-            onClick={handleStart}
+            onClick={handleNext}
             disabled={selectedTopics.length === 0}
             className={`
               px-16 py-8 text-xl rounded-full font-bold transition-all duration-300
@@ -393,7 +294,7 @@ const TopicSelection = () => {
               }
             `}
           >
-            Start Interview
+            Select Level
           </Button>
         </div>
       </div>
