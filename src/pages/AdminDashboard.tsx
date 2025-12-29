@@ -82,7 +82,7 @@ const AdminDashboard = () => {
     is_active: true,
     role: 'USER' as 'ADMIN' | 'USER',
     access_type: 'TRIAL' as 'TRIAL' | 'FULL',
-    enrolled_course: "",
+    enrolled_course: "no_course",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isCreatingUser, setIsCreatingUser] = useState(false);
@@ -411,7 +411,7 @@ const AdminDashboard = () => {
         is_active: userFormData.is_active,
         role: userFormData.role,
         access_type: userFormData.role === 'USER' ? userFormData.access_type : undefined,
-        enrolled_course: (userFormData.role === 'USER' && userFormData.enrolled_course) ? parseInt(userFormData.enrolled_course) : undefined,
+        enrolled_course: (userFormData.role === 'USER' && userFormData.enrolled_course && userFormData.enrolled_course !== "no_course") ? parseInt(userFormData.enrolled_course) : undefined,
       });
 
       toast({
@@ -429,7 +429,7 @@ const AdminDashboard = () => {
         is_active: true,
         role: 'USER',
         access_type: 'TRIAL',
-        enrolled_course: "",
+        enrolled_course: "no_course",
       });
       setShowUserForm(false);
 
@@ -958,7 +958,7 @@ const AdminDashboard = () => {
                             <SelectValue placeholder="Select course (None)" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="">None</SelectItem>
+                            <SelectItem value="no_course">None</SelectItem>
                             {topics.map((topic) => (
                               <SelectItem key={topic.id} value={topic.id.toString()}>
                                 {topic.name}
@@ -995,7 +995,7 @@ const AdminDashboard = () => {
                             is_active: true,
                             role: 'USER',
                             access_type: 'TRIAL',
-                            enrolled_course: "",
+                            enrolled_course: "no_course",
                           });
                         }}
                         variant="outline"
