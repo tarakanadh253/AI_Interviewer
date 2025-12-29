@@ -13,6 +13,8 @@ interface UserProfile {
   plain_password?: string;
   created_at: string;
   updated_at: string;
+  student_id?: string | null;
+  enrolled_course?: number | null;
 }
 
 interface Course {
@@ -152,7 +154,7 @@ class ApiService {
   async wakeUp(): Promise<void> {
     try {
       // Simple lightweight call to wake up the server (e.g. Render cold start)
-      await fetch(`${API_URL}/topics/?limit=1`, { method: 'HEAD' });
+      await fetch(`${API_URL}/users/test-connection/`, { method: 'GET' });
     } catch (e) {
       console.log('Wake up ping failed', e);
     }

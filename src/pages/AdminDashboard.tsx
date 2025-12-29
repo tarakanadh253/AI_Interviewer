@@ -82,6 +82,7 @@ const AdminDashboard = () => {
     is_active: true,
     role: 'USER' as 'ADMIN' | 'USER',
     access_type: 'TRIAL' as 'TRIAL' | 'FULL',
+    enrolled_course: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isCreatingUser, setIsCreatingUser] = useState(false);
@@ -410,6 +411,7 @@ const AdminDashboard = () => {
         is_active: userFormData.is_active,
         role: userFormData.role,
         access_type: userFormData.role === 'USER' ? userFormData.access_type : undefined,
+        enrolled_course: (userFormData.role === 'USER' && userFormData.enrolled_course) ? parseInt(userFormData.enrolled_course) : undefined,
       });
 
       toast({
@@ -427,6 +429,7 @@ const AdminDashboard = () => {
         is_active: true,
         role: 'USER',
         access_type: 'TRIAL',
+        enrolled_course: "",
       });
       setShowUserForm(false);
 
@@ -939,6 +942,35 @@ const AdminDashboard = () => {
                         </p>
                       </div>
                     )}
+
+                    {userFormData.role === 'USER' && (
+                      <div>
+                        <label className="text-sm text-foreground mb-2 block">
+                          Enrolled Course (Optional)
+                        </label>
+                        <Select
+                          value={userFormData.enrolled_course}
+                          onValueChange={(value) =>
+                            setUserFormData({ ...userFormData, enrolled_course: value })
+                          }
+                        >
+                          <SelectTrigger className="bg-input border-border text-foreground">
+                            <SelectValue placeholder="Select course (None)" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="">None</SelectItem>
+                            {topics.map((topic) => (
+                              <SelectItem key={topic.id} value={topic.id.toString()}>
+                                {topic.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          If selected, user can only take interviews for this course.
+                        </p>
+                      </div>
+                    )}
                     <div className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -963,6 +995,7 @@ const AdminDashboard = () => {
                             is_active: true,
                             role: 'USER',
                             access_type: 'TRIAL',
+                            enrolled_course: "",
                           });
                         }}
                         variant="outline"
@@ -996,12 +1029,14 @@ const AdminDashboard = () => {
                   <Table>
                     <TableHeader>
                       <TableRow className="border-border hover:bg-muted/20">
+                        <TableHead className="text-foreground">Student ID</TableHead>
                         <TableHead className="text-foreground">Username</TableHead>
                         <TableHead className="text-foreground">Name</TableHead>
                         <TableHead className="text-foreground">Email</TableHead>
                         <TableHead className="text-foreground">Role</TableHead>
                         {users.some(u => u.role === 'USER') && (
                           <>
+                            <TableHead className="text-foreground">Enrolled Course</TableHead>
                             <TableHead className="text-foreground">Access Type</TableHead>
                             <TableHead className="text-foreground">Trial Used</TableHead>
                           </>
@@ -1013,44 +1048,47 @@ const AdminDashboard = () => {
                     <TableBody>
                       {Array.isArray(users) && users.map((user) => (
                         <TableRow key={user.id} className="border-border hover:bg-muted/20">
+                          <TableCell className="text-foreground font-mono text-xs">{user.student_id || "-"}</TableCell>
                           <TableCell className="text-foreground font-medium">{user.username}</TableCell>
+
                           <TableCell className="text-foreground">{user.name || "-"}</TableCell>
                           <TableCell className="text-muted-foreground">{user.email}</TableCell>
                           <TableCell>
                             <span className={`px-2 py-1 rounded text-xs ${user.role === 'ADMIN' ? 'bg-purple-500/20 text-purple-500' : 'bg-blue-500/20 text-blue-500'}`}>
-                              {user.role === 'ADMIN' ? 'Admin' : 'User'}
+                              {user.role === 'ADMIN' ? 'Admin' : 'Student'}
                             </span>
                           </TableCell>
-
                           {users.some(u => u.role === 'USER') && (
                             <>
-                              <TableCell>
-                                {user.role === 'ADMIN' ? (
-                                  <span className="text-muted-foreground text-xs">-</span>
-                                ) : (
-                                  <span
-                                    className={`px-2 py-1 rounded text-xs ${user.access_type === 'FULL'
-                                      ? "bg-primary/20 text-primary font-medium"
-                                      : "bg-secondary/20 text-secondary"
-                                      }`}
-                                  >
-                                    {user.access_type === 'FULL' ? 'Full Access' : 'Trial'}
-                                  </span>
-                                )}
+                              <TableCell className="text-foreground">
+                                {user.enrolled_course
+                                  ? (topics.find(t => t.id === user.enrolled_course)?.name || `ID: ${user.enrolled_course}`)
+                                  : "-"}
                               </TableCell>
                               <TableCell>
-                                {user.role === 'ADMIN' ? (
-                                  <span className="text-muted-foreground text-xs">-</span>
-                                ) : (
-                                  <span
-                                    className={`px-2 py-1 rounded text-xs ${user.has_used_trial
-                                      ? "bg-secondary/20 text-secondary"
-                                      : "bg-primary/20 text-primary"
-                                      }`}
-                                  >
-                                    {user.has_used_trial ? "Yes" : "No"}
-                                  </span>
-                                )}
+                                <span
+                                  className={`px-2 py-1 rounded text-xs cursor-pointer hover:opacity-80 transition-opacity ${user.access_type === 'FULL'
+                                    ? "bg-primary/20 text-primary font-medium"
+                                    : "bg-secondary/20 text-secondary"
+                                    }`}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleUpdateAccessType(user);
+                                  }}
+                                  title="Click to toggle access type"
+                                >
+                                  {user.access_type === 'FULL' ? 'Full Access' : 'Trial'}
+                                </span>
+                              </TableCell>
+                              <TableCell>
+                                <span
+                                  className={`px-2 py-1 rounded text-xs ${user.has_used_trial
+                                    ? "bg-secondary/20 text-secondary"
+                                    : "bg-primary/20 text-primary"
+                                    }`}
+                                >
+                                  {user.has_used_trial ? "Yes" : "No"}
+                                </span>
                               </TableCell>
                             </>
                           )}
