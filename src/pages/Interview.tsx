@@ -114,15 +114,22 @@ const Interview = () => {
           throw new Error('Invalid session data: topics is not an array');
         }
 
-        for (const topicId of topicIds) {
-          const topicQuestions = await apiService.getQuestions(topicId, roundId || undefined);
-          // Ensure topicQuestions is an array before spreading
-          if (Array.isArray(topicQuestions)) {
+        // Fetch questions for all topics in parallel
+        const questionsPromises = topicIds.map(topicId =>
+          apiService.getQuestions(topicId, roundId || undefined)
+            .then(res => Array.isArray(res) ? res : [])
+            .catch(err => {
+              console.warn(`Failed to fetch questions for topic ${topicId}:`, err);
+              return [];
+            })
+        );
+
+        const questionsResults = await Promise.all(questionsPromises);
+        questionsResults.forEach(topicQuestions => {
+          if (topicQuestions.length > 0) {
             allQuestions.push(...topicQuestions);
-          } else {
-            console.warn(`Invalid questions response for topic ${topicId}:`, topicQuestions);
           }
-        }
+        });
 
         // Use seeded shuffle based on session ID for consistency when resuming
         // This ensures the same questions appear in the same order
@@ -840,9 +847,6 @@ const Interview = () => {
                         <span className={`text-xs ${isCurrent ? "text-white/60" : "text-white/30"}`}>
                           {currentQuestionIndex === index ? "Active" : isAnswered ? "Completed" : "Pending"}
                         </span>
-                        {/* Difficulty Dot */}
-                        <span className="h-1 w-1 rounded-full bg-white/20"></span>
-                        <span className="text-xs text-white/30 uppercase tracking-wider">{q.difficulty}</span>
                       </div>
                     </div>
                   </div>
@@ -874,10 +878,6 @@ const Interview = () => {
                 {currentQuestion && (
                   <span className="flex items-center gap-2">
                     {currentQuestion.topic_name}
-                    <span className="h-1 w-1 rounded-full bg-muted-foreground/30"></span>
-                    <span className="uppercase text-[10px] tracking-wider border border-border px-1.5 py-0.5 rounded text-muted-foreground bg-card">
-                      {currentQuestion.difficulty}
-                    </span>
                     {tabSwitchCount > 0 && (
                       <span className="flex items-center gap-1 text-amber-600 bg-amber-50 px-2 py-0.5 rounded text-[10px] border border-amber-200 ml-2 font-mono">
                         <AlertTriangle className="w-3 h-3" />

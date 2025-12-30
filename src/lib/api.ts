@@ -137,11 +137,16 @@ class ApiService {
           } else if (Array.isArray(value)) {
             messages.push(`${key}: ${value.join(', ')}`);
           } else if (typeof value === 'string') {
-            messages.push(`${key}: ${value}`);
+            if (key !== 'type' && key !== 'db_host_debug') {
+              messages.push(`${key}: ${value}`);
+            }
           }
         }
+        if (errorData.db_host_debug) {
+          console.error(`[Backend DB Debug] Host: ${errorData.db_host_debug}`);
+        }
         if (messages.length > 0) {
-          throw new Error(messages.join('; '));
+          throw new Error(messages.map(m => m.replace(/^error: /i, '')).join('; '));
         }
       }
 

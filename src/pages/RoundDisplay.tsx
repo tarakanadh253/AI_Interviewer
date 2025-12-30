@@ -29,15 +29,20 @@ const RoundDisplay = () => {
 
         const fetchData = async () => {
             try {
-                const [fetchedRounds] = await Promise.all([
-                    apiService.getRounds(courseId, level),
-                ]);
-
                 const username = localStorage.getItem('username');
-                let fetchedSessions: InterviewSession[] = [];
+
+                // Fetch rounds and sessions in parallel
+                const promises: Promise<any>[] = [
+                    apiService.getRounds(courseId, level),
+                ];
+
                 if (username) {
-                    fetchedSessions = await apiService.getSessionsByUsername(username);
+                    promises.push(apiService.getSessionsByUsername(username));
                 }
+
+                const results = await Promise.all(promises);
+                const fetchedRounds = results[0];
+                const fetchedSessions = username ? results[1] : [];
 
                 setRounds(fetchedRounds);
                 setSessions(fetchedSessions);
