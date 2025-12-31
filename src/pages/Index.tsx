@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Clock, Target, Award, Sparkles } from "lucide-react";
-import { Navbar } from "@/components/Navbar";
+
 
 const Index = () => {
   const navigate = useNavigate();
@@ -33,8 +33,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col relative overflow-x-hidden">
-      {/* Navbar */}
-      <Navbar />
+      {/* Navbar Removed */}
 
       {/* Background Gradients */}
       <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-ohg-navy/5 rounded-full blur-[100px] pointer-events-none -translate-y-1/2 translate-x-1/2 z-0" />
